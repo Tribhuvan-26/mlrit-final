@@ -2638,15 +2638,6 @@ export const isRepeaterField = (field: FieldConfig): boolean => fieldType(field)
 export const isListField = (field: FieldConfig): boolean =>
   isGalleryField(field) || isRepeaterField(field);
 
-/**
- * Whether a save must reject this field when it is blank.
- *
- * Media is optional (no upload => the component's bundled asset), and so is a
- * repeater (no rows => the component's bundled array). Only plain text fields
- * are required, which is what keeps a repeater-only section savable at all.
- */
-export const isRequiredField = (field: FieldConfig): boolean =>
-  !isMediaField(field) && !isRepeaterField(field);
 
 /**
  * The gallery metadata names on a field, ignoring repeater column objects.

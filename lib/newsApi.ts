@@ -29,10 +29,6 @@ export async function getLiveNews(limit = 12): Promise<NewsItem[]> {
   return data.items ?? [];
 }
 
-export async function getAchievements(): Promise<Record<string, NewsItem[]>> {
-  const data = await safeFetchJson<{ categories: Record<string, NewsItem[]> }>('/api/achievements', { categories: {} });
-  return data.categories ?? {};
-}
 
 // Items the worker has rolled out of the "current issue" window — see
 // mlrit-news-worker's rotateArchive(). Newest-first, capped server-side.

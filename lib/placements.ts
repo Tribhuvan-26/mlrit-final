@@ -225,29 +225,6 @@ export const YEAR_STATS: YearStat[] = PLACEMENT_YEARS.map((y) => ({
   highest: y.highestPackageLpa,
 }));
 
-export interface RoleRow {
-  company: string;
-  role: string;
-  salary: string;
-  selects: number;
-}
-
-// Derived from PLACEMENT_YEARS for backward compatibility with statistics page
-export const YEAR_ROLES: Record<string, RoleRow[]> = Object.fromEntries(
-  PLACEMENT_YEARS.map((y) => [
-    y.year,
-    y.companies
-      .filter((c): c is typeof c & { selections: { status: 'confirmed'; value: number } } =>
-        c.selections.status === 'confirmed'
-      )
-      .map((c) => ({
-        company: c.company,
-        role: c.role,
-        salary: c.salaryDisplay,
-        selects: c.selections.value,
-      })),
-  ])
-);
 
 // ─── Recruiter logos (self-hosted under /public/placements/) ─────────────────
 

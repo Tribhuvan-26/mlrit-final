@@ -2,7 +2,6 @@ import { asText } from '@/lib/content/sections';
 
 import { DEFAULT_BROCHURE } from '@/lib/content/documents-shared';
 
-export { DEFAULT_BROCHURE };
 
 /**
  * The brochure URL, resolved once on the server.

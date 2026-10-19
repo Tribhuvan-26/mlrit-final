@@ -864,6 +864,3 @@ export const DEPT_DATA: Record<string, DeptData> = {
   },
 };
 
-export function getDeptData(slug: string): DeptData | undefined {
-  return DEPT_DATA[slug];
-}

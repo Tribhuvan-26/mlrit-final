@@ -26,34 +26,3 @@ export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
     return getAnonClient()[prop as keyof SupabaseClient];
   },
 });
-
-let serviceClient: SupabaseClient | null = null;
-
-/**
- * Service-role client for writes. Server-only — the service role key bypasses
- * row level security, so this must never be reachable from a client component.
- */
-export function getServiceClient(): SupabaseClient {
-  if (typeof window !== 'undefined') {
-    throw new Error('getServiceClient() must only be called on the server.');
-  }
-
-  if (serviceClient) return serviceClient;
-
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    throw new Error(
-      'Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable.'
-    );
-  }
-
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!serviceRoleKey) {
-    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY environment variable.');
-  }
-
-  serviceClient = createClient(SUPABASE_URL, serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-
-  return serviceClient;
-}

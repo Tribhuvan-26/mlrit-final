@@ -28,8 +28,3 @@ for (const key of SECTION_KEYS) {
   BY_SLUG.set(slug, { page, section: rest.join('/') });
 }
 
-export const fromGlobalSlug = (globalSlug: string): { page: string; section: string } => {
-  const found = BY_SLUG.get(globalSlug);
-  if (!found) throw new Error(`Not a section global slug: ${globalSlug}`);
-  return found;
-};

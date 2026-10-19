@@ -1103,14 +1103,3 @@ export function getAllClubIds(): string[] {
   return CLUBS.filter((c) => c.hasDetailPage).map((c) => c.id);
 }
 
-// Hero floating card images — used by the Trionn-style convergence hero
-export const HERO_ORBITAL_IMAGES = [
-  { src: '/images/students/club-event.png',              alt: 'Students at a cultural event' },
-  { src: '/images/facilities/campus/sti-hub-1.jpg',      alt: 'STI Hub innovation space' },
-  { src: '/images/students/students-laughing.png',       alt: 'Students bonding on campus' },
-  { src: '/images/sports/marathon-runner.png',           alt: 'Student marathon' },
-  { src: '/images/facilities/campus/library-wide-1.jpg', alt: 'Campus library' },
-  { src: '/images/students/campus-steps.png',            alt: 'Students on campus steps' },
-  { src: '/images/students/classroom-chat.png',          alt: 'Students in discussion' },
-  { src: '/images/campus/canteen-friends.png',           alt: 'Friends at the campus canteen' },
-];

@@ -10,7 +10,6 @@ import {
   useSyncExternalStore,
 } from 'react';
 
-export { resolveAssetUrl } from '@/lib/cdn/url';
 
 /**
  * Live preview plumbing.
