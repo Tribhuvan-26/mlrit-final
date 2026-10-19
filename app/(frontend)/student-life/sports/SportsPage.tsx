@@ -759,6 +759,33 @@ function useCursorPos() {
   return { x, y };
 }
 
+// Card geometry, used to keep it inside the viewport on narrow (phone) screens.
+const CARD_W = 240;
+const CARD_OFFSET = 20;   // gap between cursor tip and card
+const EDGE = 8;           // minimum distance from any viewport edge
+const MOBILE_MAX = 767;   // below Tailwind `md`: card sits centred, not on the cursor
+
+const isMobileViewport = () => window.innerWidth <= MOBILE_MAX;
+
+// Desktop: right of the cursor when it fits, otherwise flipped to its left;
+// then clamped so the card never leaves the screen. Mobile: centred.
+function clampCardX(cursor: number): number {
+  const vw = window.innerWidth;
+  if (isMobileViewport()) return (vw - CARD_W) / 2;
+  const right = cursor + CARD_OFFSET;
+  const x = right + CARD_W <= vw - EDGE ? right : cursor - CARD_OFFSET - CARD_W;
+  return Math.min(Math.max(x, EDGE), Math.max(EDGE, vw - CARD_W - EDGE));
+}
+
+// Desktop: vertically centred-ish on the cursor (45% above it), clamped to the
+// viewport. Mobile: centred.
+function clampCardY(cursor: number, height: number): number {
+  const vh = window.innerHeight;
+  if (isMobileViewport()) return (vh - height) / 2;
+  const y = cursor - height * 0.45;
+  return Math.min(Math.max(y, EDGE), Math.max(EDGE, vh - height - EDGE));
+}
+
 // Fixed cursor-following image card (portal-style, sits above everything)
 function CursorCard({
   sport,
@@ -775,6 +802,9 @@ function CursorCard({
 }) {
   const scale   = useSpring(visible ? 1 : 0.78, { stiffness: 260, damping: 28 });
   const opacity = useSpring(visible ? 1 : 0,    { stiffness: 260, damping: 28 });
+  const cardRef = useRef<HTMLDivElement>(null);
+  const left = useTransform(cursorX, (v) => clampCardX(v as number));
+  const top  = useTransform(cursorY, (v) => clampCardY(v as number, cardRef.current?.offsetHeight ?? 230));
 
   useEffect(() => {
     scale.set(visible ? 1 : 0.78);
@@ -788,15 +818,14 @@ function CursorCard({
       aria-hidden="true"
       className="fixed pointer-events-none select-none z-[120] top-0 left-0"
       style={{
-        x: cursorX,
-        y: cursorY,
-        translateX: 20,    // offset right of cursor tip
-        translateY: '-45%',
+        x: left,
+        y: top,
         scale,
         opacity,
       }}
     >
       <div
+        ref={cardRef}
         className="w-[240px] overflow-hidden rounded-2xl shadow-2xl"
         style={{ background: sport.color }}
       >
