@@ -16,3 +16,19 @@ uploads are not served by this snippet.
 
 `/_next/image` still reads images from the local `public/` folder, so `public/`
 must stay on the server until next/image is pointed at S3.
+
+## Payload media in S3
+
+Payload uploads (the `media` collection) are stored in the same bucket, at the
+bucket root, when the server's `.env.local` has:
+
+```
+S3_BUCKET=mlrit-website-assets
+AWS_REGION=ap-south-1
+```
+
+Those objects are private. The site serves them through Payload at
+`/api/media/file/<filename>`, using the EC2 instance role (no access keys on the
+server). The `20261019_061412_s3_storage` migration adds the `_objectkey`
+column that the S3 storage plugin needs; run `npx payload migrate` after
+pulling.
