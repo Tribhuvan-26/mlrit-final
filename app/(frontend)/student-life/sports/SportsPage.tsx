@@ -770,6 +770,7 @@ const isMobileViewport = () => window.innerWidth <= MOBILE_MAX;
 // Desktop: right of the cursor when it fits, otherwise flipped to its left;
 // then clamped so the card never leaves the screen. Mobile: centred.
 function clampCardX(cursor: number): number {
+  if (typeof window === 'undefined') return cursor; // server render: no viewport yet
   const vw = window.innerWidth;
   if (isMobileViewport()) return (vw - CARD_W) / 2;
   const right = cursor + CARD_OFFSET;
@@ -780,6 +781,7 @@ function clampCardX(cursor: number): number {
 // Desktop: vertically centred-ish on the cursor (45% above it), clamped to the
 // viewport. Mobile: centred.
 function clampCardY(cursor: number, height: number): number {
+  if (typeof window === 'undefined') return cursor;
   const vh = window.innerHeight;
   if (isMobileViewport()) return (vh - height) / 2;
   const y = cursor - height * 0.45;
