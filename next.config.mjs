@@ -40,6 +40,9 @@ const nextConfig = {
       { protocol: 'https', hostname: 'res.cloudinary.com' },
       { protocol: 'https', hostname: 'i.ibb.co' },
       { protocol: 'https', hostname: 'mlrit-next.vercel.app' },
+      // Originals for /_next/image: nginx points local paths (/images/x.jpg) at the
+      // S3 copy of public/ (deploy/nginx/s3-assets.conf), so the optimizer reads from S3.
+      { protocol: 'https', hostname: 'mlrit-website-assets.s3.ap-south-1.amazonaws.com', pathname: '/site/**' },
     ],
   },
   async headers() {
