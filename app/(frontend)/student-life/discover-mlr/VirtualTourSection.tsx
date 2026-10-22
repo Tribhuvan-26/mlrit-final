@@ -84,7 +84,6 @@ function TourStage({
                   the official tour page
                 </a>{' '}
                 directly.
->>>>>>> 8a5083b (Replace mlrit.ac.in links with internal routes and create fallback page)
               </p>
             </div>
           </motion.div>
