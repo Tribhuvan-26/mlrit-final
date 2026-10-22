@@ -110,3 +110,9 @@ supabase/.temp/
 
 # Payload local media uploads
 public/uploads/
+
+# Local dev media dumps — not canonical site assets (untracked since the governance-pages work)
+clubs/came/
+public/images/events/SBS_0711.JPG
+public/images/events/SBS_0750.JPG
+public/images/events/SBS_0998.JPG
