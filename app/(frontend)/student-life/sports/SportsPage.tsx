@@ -156,7 +156,7 @@ const ACCOLADES = [
 // Sports quota lists — only 2022-23 document is publicly available from the official site.
 // Later years require updated PDFs from the Sports office.
 const QUOTA_DOCS = [
-  { year: '2022–23', label: 'Sports Quota List 2022–23', href: 'https://mlrit.ac.in/wp-content/uploads/2022/12/Sports-Quota-Students-List-2022-23.pdf' },
+  { year: '2022–23', label: 'Sports Quota List 2022–23', href: 'https://files.mlrit.ac.in/uploads/Sports-Quota-Students-List-2022-23.pdf' },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────

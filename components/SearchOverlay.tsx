@@ -197,7 +197,7 @@ export default function SearchOverlay({
     items.push({
       title: 'Library',
       description: 'Campus library — books, digital resources and reading spaces',
-      url: '/student-life/facilities',
+      url: '/old/campus-life/library',
       type: 'page',
       category: 'Campus',
       exactKeys: ['library'],

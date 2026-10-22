@@ -74,8 +74,17 @@ function TourStage({
                 Tour unavailable
               </p>
               <p className="mt-1 text-muted text-[0.82rem] leading-relaxed max-w-xs">
-                This 360° view could not be loaded. Please try another location,
-                or reload the page.
+                This 360° view could not be loaded. Please try visiting{' '}
+                <a
+                  href="/old/virtual-tour"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline underline-offset-2"
+                >
+                  the official tour page
+                </a>{' '}
+                directly.
+>>>>>>> 8a5083b (Replace mlrit.ac.in links with internal routes and create fallback page)
               </p>
             </div>
           </motion.div>

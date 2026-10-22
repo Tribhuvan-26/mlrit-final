@@ -56,13 +56,13 @@ const USEFUL_SECTIONS = [
     id: 'accreditation',
     label: 'Accreditation & Rankings',
     links: [
-      { label: 'AICTE Approvals',       href: '/about/rankings-awards' },
-      { label: 'NIRF Rankings',         href: '/about/rankings-awards' },
-      { label: 'NAAC SSR',              href: '/iqac/naac' },
+      { label: 'AICTE Approvals',       href: '/old/aicte-approvals',       ext: false },
+      { label: 'NIRF Rankings',         href: '/old/nirf-ranked-institution', ext: false },
+      { label: 'NAAC SSR',              href: 'https://naac.mlrit.ac.in/',                   ext: true },
       { label: 'NBA — DCP',             href: '/iqac/nba' },
       { label: 'AQAR Reports',          href: '/iqac/aqar' },
       { label: 'Rankings & Awards',     href: '/about/rankings-awards' },
-      { label: 'Mandatory Disclosures', href: 'https://mlrit.ac.in/mandatory-disclosures/',  ext: true },
+      { label: 'Mandatory Disclosures', href: '/old/mandatory-disclosures',  ext: false },
     ],
   },
   {
@@ -70,8 +70,8 @@ const USEFUL_SECTIONS = [
     label: 'Governance & Policies',
     links: [
       { label: 'UGC Undertaking',      href: 'https://files.mlrit.ac.in/uploads/UGC-2f_12b.pdf', ext: true },
-      { label: 'Service Rules',        href: 'https://mlrit.ac.in/wp-content/uploads/gen/govern/Recruitment-policy-service%20rules.pdf', ext: true },
-      { label: 'Financial Statements', href: 'https://mlrit.ac.in/financial-statements/',   ext: true },
+      { label: 'Service Rules',        href: 'https://files.mlrit.ac.in/uploads/gen/govern/Recruitment-policy-service%20rules.pdf', ext: true },
+      { label: 'Financial Statements', href: '/old/financial-statements',   ext: false },
       { label: 'DPR',                  href: 'https://files.mlrit.ac.in/university/DPR.pdf', ext: true },
       { label: 'Admission Policies',   href: '/admissions/policies' },
       { label: 'OBE Portal',           href: 'https://103.15.62.235/ioncudos_mlrit_tier1/',  ext: true },
@@ -101,7 +101,7 @@ const USEFUL_SECTIONS = [
       { label: 'Fee Structure',     href: '/admissions/fees' },
       { label: 'Sports',            href: '/campus/sports' },
       { label: 'Student Clubs',      href: '/campus/clubs' },
-      { label: 'NSS Event Reports', href: 'https://mlrit.ac.in/nss-event-reports/', ext: true },
+      { label: 'NSS Event Reports', href: '/old/nss-event-reports', ext: false },
       { label: 'Virtual Tour',      href: '/student-life/discover-mlr' },
       { label: 'LMS',               href: 'https://lms.mlrit.ac.in/',              ext: true },
       { label: 'CampusHub',          href: 'https://campushub.mlrit.ac.in/', ext: true },
@@ -185,6 +185,8 @@ const DEFAULT_CRAFTED_NAME = 'The Students';
 const DEFAULT_CRAFTED_TAIL = ' of MLRIT';
 const DEFAULT_COPYRIGHT = '© 2026 KMR Educational Society';
 const DEFAULT_BADGES = ['Affiliated to JNTUH', 'Approved by AICTE'];
+const DEFAULT_DISCLOSURES_LABEL = 'Disclosures';
+const DEFAULT_DISCLOSURES_HREF = '/old/mandatory-disclosures';
 
 export type FooterContent = {
   links?: unknown;
