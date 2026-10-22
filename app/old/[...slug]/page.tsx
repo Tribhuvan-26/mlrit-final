@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function OldContentPage({ params }: { params: { slug: string[] } }) {
   const path = params.slug.join('/');
   
@@ -12,18 +14,18 @@ export default function OldContentPage({ params }: { params: { slug: string[] } 
           Path: /{path}
         </p>
         <div className="flex gap-4 justify-center">
-          <a 
+          <Link 
             href="/" 
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
           >
             Go to Homepage
-          </a>
-          <a 
+          </Link>
+          <Link 
             href="/chronicles" 
             className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition"
           >
             View News
-          </a>
+          </Link>
         </div>
       </div>
     </div>
