@@ -83,7 +83,7 @@ const ADMISSION_STEPS = [
   {
     id: 'step1',
     title: '1. Online Registration',
-    body: 'Register on the MLRIT admissions portal at mlrit.ac.in/admissions. Fill in personal details, academic history and upload a recent photograph. Keep your EAMCET/ICET/PGECET hall ticket and score card ready.',
+    body: 'Register through the Admissions section of the MLRIT website. Fill in personal details, academic history and upload a recent photograph. Keep your EAMCET/ICET/PGECET hall ticket and score card ready.',
   },
   {
     id: 'step2',

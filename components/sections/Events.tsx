@@ -34,7 +34,7 @@ const SLIDES: Slide[] = [
     speaker: 'Equinox E-Summit',
     speakerRole: 'Annual · MLRIT Campus',
     video: '/videos/equinox.mp4',
-    poster:'https://mlrit-next.vercel.app/assets/SBS_0711.JPG',
+    poster:'/images/events/SBS_0711.JPG',
   },
   {
     logo:  '/assets/zignasa-logo.png',
@@ -46,7 +46,7 @@ const SLIDES: Slide[] = [
     speaker: 'Zignasa',
     speakerRole: 'Annual Fest · MLRIT',
     video: '/videos/zignasa.mp4',
-    poster:'https://mlrit-next.vercel.app/assets/SBS_0750.JPG',
+    poster:'/images/events/SBS_0750.JPG',
   },
   {
     logo:  '/assets/logo.svg',
@@ -58,7 +58,7 @@ const SLIDES: Slide[] = [
     speaker: 'Zenith',
     speakerRole: 'National Tech Fest · MLRIT',
     video: '/videos/zenith.mp4',
-    poster:'https://mlrit-next.vercel.app/assets/SBS_0998.JPG',
+    poster:'/images/events/SBS_0998.JPG',
   },
   {
     logo:  '/assets/logo.svg',

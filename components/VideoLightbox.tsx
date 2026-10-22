@@ -57,7 +57,7 @@ export default function VideoLightbox({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed inset-0 z-[3000] bg-ink/95 backdrop-blur-md flex items-center justify-center px-4 md:px-10 py-16 md:py-20 overflow-y-auto"
+          className="fixed inset-0 z-[3000] bg-ink/95 backdrop-blur-md flex items-center justify-center px-4 md:px-10"
           onClick={onClose}
           role="dialog"
           aria-modal="true"
@@ -68,21 +68,33 @@ export default function VideoLightbox({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-[1200px] mx-auto"
+            className="relative w-full max-w-5xl mx-auto flex flex-col"
+            style={{ maxHeight: 'calc(100vh - 4rem)' }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close video"
-              className="absolute -top-14 md:-top-16 right-0 inline-flex items-center gap-2 h-11 pl-4 pr-4 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white/90 hover:text-white hover:bg-white/20 transition-all text-[0.82rem] font-medium tracking-[-0.005em] z-[2]"
-            >
-              Close <X className="w-4 h-4" />
-            </button>
+            <div className="flex items-center justify-between mb-4 shrink-0">
+              <div>
+                {eyebrow && (
+                  <div className="editorial-eyebrow !text-white/50 !text-[0.65rem]">
+                    {eyebrow}
+                  </div>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close video"
+                className="inline-flex items-center gap-2 h-9 pl-4 pr-4 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white/90 hover:text-white hover:bg-white/20 transition-all text-[0.82rem] font-medium tracking-[-0.005em]"
+              >
+                Close <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
 
-            {/* Video card */}
-            <div className="relative aspect-video w-full rounded-[20px] md:rounded-[24px] overflow-hidden bg-black shadow-[0_60px_140px_-30px_rgba(0,0,0,0.7),0_20px_60px_-20px_rgba(232,93,4,0.18)]">
+            {/* Video — shrinks to fit remaining height */}
+            <div className="relative w-full rounded-[16px] md:rounded-[20px] overflow-hidden bg-black shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8),0_12px_40px_-10px_rgba(232,93,4,0.14)] shrink min-h-0"
+              style={{ aspectRatio: '16/9' }}
+            >
               <video
                 ref={videoRef}
                 src={src}
@@ -94,26 +106,31 @@ export default function VideoLightbox({
               />
             </div>
 
-            {/* Text below the video */}
-            {(eyebrow || title || description) && (
-              <div className="mt-8 md:mt-10 max-w-[820px]">
-                {eyebrow && (
-                  <div className="editorial-eyebrow !text-white/60 !text-[0.68rem]">
-                    {eyebrow}
-                  </div>
-                )}
+            {/* Title + CTA row below video */}
+            <div className="mt-5 shrink-0 flex items-end justify-between gap-6">
+              <div className="min-w-0">
                 {title && (
-                  <h3 className="mt-3 font-display italic font-medium text-white leading-[1.12] tracking-[-0.02em] text-[clamp(1.6rem,3vw,2.4rem)]">
+                  <h3 className="font-display italic font-medium text-white leading-[1.12] tracking-[-0.02em] text-[clamp(1.1rem,2.2vw,1.6rem)]">
                     {title}
                   </h3>
                 )}
                 {description && (
-                  <p className="mt-4 text-white/72 font-light leading-[1.7] text-[1rem] md:text-[1.05rem] max-w-[640px]">
+                  <p className="mt-2 text-white/55 font-light leading-[1.6] text-[0.82rem] md:text-[0.88rem] max-w-[560px] line-clamp-2">
                     {description}
                   </p>
                 )}
               </div>
-            )}
+              <a
+                href="/student-life/discover-mlr"
+                onClick={onClose}
+                className="shrink-0 inline-flex items-center gap-1.5 text-white/60 hover:text-white transition-colors text-[0.82rem] font-medium tracking-[-0.01em] whitespace-nowrap group"
+              >
+                Campus Tour
+                <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" aria-hidden>
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </a>
+            </div>
           </motion.div>
         </motion.div>
       )}

@@ -232,7 +232,7 @@ export const INFO_PAGES: Record<string, InfoPage> = {
         title: 'MLR Institute of Technology',
         subtitle: 'Institutional Brochure 2025–26',
         meta: 'PDF · 30.5 MB · English',
-        href: 'https://mlrit.ac.in/wp-content/uploads/2024/06/MLRIT-Brochure.pdf',
+        href: '/admissions/mlrit-brochure.pdf',
         external: true,
       },
       { kind: 'heading', eyebrow: "What's Inside", title: 'A complete look at', italic: 'campus life.' },
@@ -362,7 +362,7 @@ export const INFO_PAGES: Record<string, InfoPage> = {
         items: [
           { label: 'Check Eligibility', href: '/admissions/eligibility', variant: 'solid' },
           { label: 'Fee Structure', href: '/admissions/fees', variant: 'outline' },
-          { label: 'Download Application', href: 'https://mlrit.ac.in/admissions/', variant: 'outline', external: true },
+          { label: 'Download Application', href: '/admissions/admission-form-2024-25.pdf', variant: 'outline', external: true },
         ],
       },
     ],
@@ -473,7 +473,7 @@ export const INFO_PAGES: Record<string, InfoPage> = {
           'Cash or card at the MLRIT accounts office.',
         ],
       },
-      { kind: 'cta', label: 'View fee details at mlrit.ac.in →', href: 'https://mlrit.ac.in/admissions/', external: true },
+      { kind: 'cta', label: 'View fee structure →', href: '/admissions/fees' },
     ],
   },
 

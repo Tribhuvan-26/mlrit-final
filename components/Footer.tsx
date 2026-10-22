@@ -56,9 +56,9 @@ const USEFUL_SECTIONS = [
     id: 'accreditation',
     label: 'Accreditation & Rankings',
     links: [
-      { label: 'AICTE Approvals',       href: 'https://mlrit.ac.in/aicte-approvals/',       ext: true },
-      { label: 'NIRF Rankings',         href: 'https://mlrit.ac.in/nirf-ranked-institution/', ext: true },
-      { label: 'NAAC SSR',              href: 'https://naac.mlrit.ac.in/',                   ext: true },
+      { label: 'AICTE Approvals',       href: '/about/rankings-awards' },
+      { label: 'NIRF Rankings',         href: '/about/rankings-awards' },
+      { label: 'NAAC SSR',              href: '/iqac/naac' },
       { label: 'NBA — DCP',             href: '/iqac/nba' },
       { label: 'AQAR Reports',          href: '/iqac/aqar' },
       { label: 'Rankings & Awards',     href: '/about/rankings-awards' },
@@ -185,8 +185,6 @@ const DEFAULT_CRAFTED_NAME = 'The Students';
 const DEFAULT_CRAFTED_TAIL = ' of MLRIT';
 const DEFAULT_COPYRIGHT = '© 2026 KMR Educational Society';
 const DEFAULT_BADGES = ['Affiliated to JNTUH', 'Approved by AICTE'];
-const DEFAULT_DISCLOSURES_LABEL = 'Disclosures';
-const DEFAULT_DISCLOSURES_HREF = 'https://mlrit.ac.in/mandatory-disclosures/';
 
 export type FooterContent = {
   links?: unknown;
@@ -197,8 +195,6 @@ export type FooterContent = {
   craftedTail?: string;
   copyright?: string;
   badges?: unknown;
-  disclosuresLabel?: string;
-  disclosuresHref?: string;
 };
 
 type FooterColumn = { head: string; links: { label: string; href: string; ext?: boolean }[] };
@@ -259,9 +255,6 @@ export default function Footer(props: FooterContent = {}) {
   const craftedName = props.craftedName?.trim() || DEFAULT_CRAFTED_NAME;
   const craftedTail = props.craftedTail?.trim() || DEFAULT_CRAFTED_TAIL;
   const copyright = props.copyright?.trim() || DEFAULT_COPYRIGHT;
-  const disclosuresLabel = props.disclosuresLabel?.trim() || DEFAULT_DISCLOSURES_LABEL;
-  const disclosuresHref = props.disclosuresHref?.trim() || DEFAULT_DISCLOSURES_HREF;
-
   return (
     <footer className="bg-warm-light border-t border-border relative isolate">
 
@@ -346,21 +339,14 @@ export default function Footer(props: FooterContent = {}) {
 
       {/* Bottom legal */}
       <div className="border-t border-border">
-        <div className="w-full px-6 md:px-10 lg:px-12 py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-[0.8rem] text-muted font-sans">
-          <div className="flex flex-wrap gap-x-4 gap-y-1.5 items-center">
-            <span>{copyright}</span>
-            {/* Dot bundled with the label that follows it so a mobile wrap
-                can't strand the separator alone at the end of a line. */}
-            {badges.map((badge) => (
-              <span key={badge}>
-                <span className="text-subtle mr-1">·</span>
-                {badge}
-              </span>
-            ))}
-          </div>
-          <div className="flex gap-6">
-            <a href={disclosuresHref} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{disclosuresLabel}</a>
-          </div>
+        <div className="w-full px-6 md:px-10 lg:px-12 py-5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[0.8rem] text-muted font-sans">
+          <span>{copyright}</span>
+          {badges.map((badge) => (
+            <span key={badge}>
+              <span className="text-subtle mr-1">·</span>
+              {badge}
+            </span>
+          ))}
         </div>
       </div>
     </footer>

@@ -12,7 +12,7 @@ const FAQS = [
   {
     id: 'q1',
     q: 'What is the last date to apply for admissions AY 2025–26?',
-    a: 'MLRIT admissions are linked to the AP/TS EAMCET, ICET and PGECET state counselling schedules. Typically, the convener quota counselling runs from July to September. Management quota admissions continue until seats are filled. Visit mlrit.ac.in/admissions for the latest dates.',
+    a: 'MLRIT admissions are linked to the AP/TS EAMCET, ICET and PGECET state counselling schedules. Typically, the convener quota counselling runs from July to September. Management quota admissions continue until seats are filled. Visit the Admissions section of this site for the latest dates.',
     tags: ['dates', 'apply', 'deadline'],
   },
   {

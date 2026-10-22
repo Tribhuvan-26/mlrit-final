@@ -25,9 +25,9 @@ const FALLBACK_MINUTES = [
 ];
 
 const FALLBACK_OTHER_REPORTS = [
-  { label: 'Strategic Perspective Plan',    href: 'https://mlrit.ac.in/iqac/',           tag: 'Planning'      },
+  { label: 'Strategic Perspective Plan',    href: '/iqac',                               tag: 'Planning'      },
   { label: 'Policies',                      href: 'https://mlrit.ac.in/iqac/policies/',  tag: 'Policy'        },
-  { label: 'Newsletters',                   href: 'https://mlrit.ac.in/iqac/',           tag: 'Publications'  },
+  { label: 'Newsletters',                   href: '/iqac',                               tag: 'Publications'  },
   { label: 'NBA — Programme Accreditation', href: '/iqac/nba',                           tag: 'Accreditation' },
 ];
 

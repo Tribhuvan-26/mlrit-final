@@ -79,8 +79,8 @@ const nextConfig = {
               // Video/audio: bundled files, /cdn proxy (both 'self'), plus blob:
               // for the admin live preview showing a not-yet-uploaded file.
               "media-src 'self' blob: data:",
-              // openstreetmap.org: components/MapEmbed.tsx (campus map on contact/support pages).
-              "frame-src 'self' https://www.google.com https://www.instagram.com https://www.openstreetmap.org",
+              // openstreetmap.org: MapEmbed (campus map). google.com + maps.google.com: Street View panoramas.
+              "frame-src 'self' https://www.google.com https://maps.google.com https://google.com https://www.instagram.com https://www.openstreetmap.org https://openstreetmap.org",
               "frame-ancestors 'self'",
               "base-uri 'self'",
               "form-action 'self'",
@@ -101,6 +101,10 @@ const nextConfig = {
     return [
       { source: '/about/vision-mission/introduction', destination: '/about', permanent: true },
       { source: '/campus/events', destination: '/campus/clubs', permanent: true },
+      // Legacy WordPress paths that now have a verified local equivalent — keep
+      // old inbound links working after the redesign serves mlrit.ac.in.
+      { source: '/virtual-tour', destination: '/student-life/discover-mlr', permanent: true },
+      { source: '/campus-life/library', destination: '/student-life/facilities', permanent: true },
     ];
   },
 };

@@ -178,7 +178,7 @@ function getSmartActions(msg: Message, brochureUrl: string = DEFAULT_BROCHURE): 
         label: '🗺️ View on Google Maps',
         href: 'https://maps.app.goo.gl/UJSbCCDzhnMJ82Vd8',
       },
-      { label: 'Contact MLRIT', href: 'https://mlrit.ac.in/contactus/' },
+      { label: 'Contact MLRIT', href: '/admissions/support' },
     ];
   } else if (target === 'admissions' || /\badmissions?\b/.test(text)) {
     actions = [

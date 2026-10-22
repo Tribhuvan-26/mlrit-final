@@ -85,7 +85,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" className={`${manrope.variable} ${playfair.variable} ${jetbrains.variable}`}>
-      <body className="bg-paper text-foreground font-sans antialiased">
+      <body className="bg-paper text-foreground font-sans antialiased" suppressHydrationWarning>
         <SiteChrome footer={footer} pageHeaders={pageHeaders} brochureUrl={brochureUrl}>
           {children}
         </SiteChrome>

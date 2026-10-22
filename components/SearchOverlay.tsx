@@ -193,11 +193,11 @@ export default function SearchOverlay({
       });
     });
 
-    // Library lives on the external site — still a real, first-class destination.
+    // Library — lives on the local facilities page, still a first-class destination.
     items.push({
       title: 'Library',
       description: 'Campus library — books, digital resources and reading spaces',
-      url: 'https://mlrit.ac.in/campus-life/library/',
+      url: '/student-life/facilities',
       type: 'page',
       category: 'Campus',
       exactKeys: ['library'],
