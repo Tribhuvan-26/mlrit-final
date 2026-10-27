@@ -565,7 +565,6 @@ export default async function CircularsPage() {
             </span>
             <h2 className="mt-3 font-sans font-black tracking-tighter text-foreground text-[clamp(1.8rem,3vw,2.6rem)] leading-[1.04]">{copy('recent', 'Recent')}<span className="font-display italic font-medium text-primary">{copy('circulars', 'circulars.')}</span>
             </h2>
-            <p className="mt-3 text-muted text-[0.93rem] max-w-[620px] leading-relaxed">{copy('allDocumentsBelowAre', 'All documents below are hosted locally. Use View to open in-browser or Download to save a copy.')}</p>
           </Reveal>
 
           <Stagger className="mt-6 md:mt-10 space-y-3" delay={0.04}>
