@@ -222,9 +222,17 @@ export default function ApexMemoryLane() {
     rafRef.current      = requestAnimationFrame(tick);
   }, [tick]);
 
+  // Animate only while on screen — off screen the loop still re-rendered the
+  // carousel every frame.
+  const sectionRef = useRef<HTMLElement>(null);
   useEffect(() => {
-    startLoop();
-    return () => cancelAnimationFrame(rafRef.current);
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) startLoop(); else cancelAnimationFrame(rafRef.current);
+    });
+    io.observe(el);
+    return () => { io.disconnect(); cancelAnimationFrame(rafRef.current); };
   }, [startLoop]);
 
   // Drag
@@ -262,7 +270,7 @@ export default function ApexMemoryLane() {
   const activeIdx = Math.round(displayPos) % count;
 
   return (
-    <section className="relative z-10 py-24 md:py-40 overflow-hidden" aria-label="Memory Lane">
+    <section ref={sectionRef} className="relative z-10 py-24 md:py-40 overflow-hidden" aria-label="Memory Lane">
 
       {/* Heading */}
       <div className="max-w-[1200px] mx-auto px-6 md:px-10 lg:px-16 mb-20">

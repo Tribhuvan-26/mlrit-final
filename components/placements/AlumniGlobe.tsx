@@ -236,10 +236,20 @@ export default function AlumniGlobe() {
         phiRef.current += 0.003;
         globe.update({ phi: phiRef.current });
         updateLabels(phiRef.current);
-        rafRef.current = requestAnimationFrame(tick);
+        rafRef.current = visible ? requestAnimationFrame(tick) : 0;
       };
       rafRef.current = requestAnimationFrame(tick);
+      startTick = () => { if (!rafRef.current) rafRef.current = requestAnimationFrame(tick); };
     };
+
+    // Spin only while on screen; the WebGL redraw ran every frame regardless.
+    let visible = true;
+    let startTick = () => {};
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible) startTick();
+    });
+    io.observe(wrapper);
 
     init();
     const ro = new ResizeObserver(() => {
@@ -249,6 +259,7 @@ export default function AlumniGlobe() {
     });
     ro.observe(wrapper);
     return () => {
+      io.disconnect();
       ro.disconnect();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       globeRef.current?.destroy(); globeRef.current = null;

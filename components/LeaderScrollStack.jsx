@@ -112,10 +112,14 @@ const LeaderScrollStack = ({
     const next = l + (t - l) * 0.18;
     lenScroll.current = Math.abs(next - t) < 0.05 ? t : next;
     apply();
-    rafRef.current = requestAnimationFrame(tick);
+    // Stop once the lerp has caught up; the next scroll event restarts it.
+    rafRef.current = lenScroll.current === t ? null : requestAnimationFrame(tick);
   }, [apply]);
 
-  const onScroll = useCallback(() => { targetScroll.current = window.scrollY; }, []);
+  const onScroll = useCallback(() => {
+    targetScroll.current = window.scrollY;
+    if (!rafRef.current) rafRef.current = requestAnimationFrame(tick);
+  }, [tick]);
 
   useLayoutEffect(() => {
     const scroller = scrollerRef.current;
@@ -138,19 +142,21 @@ const LeaderScrollStack = ({
     lenScroll.current    = window.scrollY;
     apply();
 
+    const remeasure = () => { measure(); apply(); };
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', measure);
+    window.addEventListener('resize', remeasure);
 
-    const ro = new ResizeObserver(measure);
+    const ro = new ResizeObserver(remeasure);
     cards.forEach((c) => ro.observe(c));
 
     rafRef.current = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', measure);
+      window.removeEventListener('resize', remeasure);
       ro.disconnect();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
       cardsRef.current  = [];
       offsetsRef.current = [];
       completedRef.current = false;

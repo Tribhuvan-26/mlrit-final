@@ -99,12 +99,19 @@ function ValuesMarquee({ gradientText }: { gradientText: React.CSSProperties }) 
   const targetRef   = useRef(0);
 
   useEffect(() => {
-    const onScroll = () => { targetRef.current = window.scrollY; };
+    // Runs while the lerp is catching up with a scroll, then stops until the
+    // next scroll event, instead of measuring layout every frame forever.
+    const onScroll = () => {
+      targetRef.current = window.scrollY;
+      if (!rafRef.current) rafRef.current = requestAnimationFrame(tick);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
 
     const tick = () => {
       // Smooth lerp toward target
       scrollRef.current += (targetRef.current - scrollRef.current) * 0.08;
+      const settled = Math.abs(targetRef.current - scrollRef.current) < 0.1;
+      if (settled) scrollRef.current = targetRef.current;
 
       const section = sectionRef.current;
       if (section) {
@@ -116,9 +123,10 @@ function ValuesMarquee({ gradientText }: { gradientText: React.CSSProperties }) 
         if (row1Ref.current) row1Ref.current.style.transform = `translateX(${-travel}px)`;
         if (row2Ref.current) row2Ref.current.style.transform = `translateX(${travel}px)`;
       }
-      rafRef.current = requestAnimationFrame(tick);
+      rafRef.current = settled ? null : requestAnimationFrame(tick);
     };
 
+    targetRef.current = window.scrollY;
     rafRef.current = requestAnimationFrame(tick);
     return () => {
       window.removeEventListener('scroll', onScroll);

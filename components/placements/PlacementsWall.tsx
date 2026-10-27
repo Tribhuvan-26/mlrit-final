@@ -75,10 +75,16 @@ export default function PlacementsWall() {
     };
 
     init();
-    tick();
+    // Draw only while on screen; the O(n²) line pass ran every frame even
+    // when the section was scrolled away.
+    const io = new IntersectionObserver(([e]) => {
+      cancelAnimationFrame(raf);
+      if (e.isIntersecting) tick();
+    });
+    io.observe(canvas);
     const onR = () => init();
     window.addEventListener('resize', onR);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', onR); };
+    return () => { io.disconnect(); cancelAnimationFrame(raf); window.removeEventListener('resize', onR); };
   }, []);
 
   return (

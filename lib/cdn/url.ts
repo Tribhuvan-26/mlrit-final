@@ -24,6 +24,12 @@ export const resolveAssetUrl = (
     return options?.allowTransient ? value : undefined;
   }
 
+  // Saved slides still hot-link full-size (11–17 MB) photos from the old
+  // Vercel preview; the same photos are served resized from our own CDN.
+  // ponytail: drop once those CMS rows are re-saved with /images/events/ paths.
+  if (value.startsWith('https://mlrit-next.vercel.app/assets/'))
+    return value.replace('https://mlrit-next.vercel.app/assets/', '/images/events/');
+
   if (value.startsWith('/') || /^https?:\/\//i.test(value)) return value;
   return `/cdn/${value}`;
 };

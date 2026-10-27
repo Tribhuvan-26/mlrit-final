@@ -50,7 +50,12 @@ export default function MLRITStory() {
   const targetRef = useRef(0);
 
   useEffect(() => {
-    const onScroll = () => { targetRef.current = window.scrollY; };
+    // One measurement per frame while scrolling, instead of a loop that
+    // measured layout every frame forever.
+    const onScroll = () => {
+      targetRef.current = window.scrollY;
+      if (!rafRef.current) rafRef.current = requestAnimationFrame(tick);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
 
     const tick = () => {
@@ -64,7 +69,7 @@ export default function MLRITStory() {
           setActive(Math.min(STORY.length - 1, Math.floor(p * STORY.length)));
         }
       }
-      rafRef.current = requestAnimationFrame(tick);
+      rafRef.current = 0;
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => {
