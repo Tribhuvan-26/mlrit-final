@@ -1,0 +1,52 @@
+name: Deploy to mlrit.ac.in
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    # Skipped until the repo variables below are set.
+    if: vars.AWS_DEPLOY_ROLE_ARN != '' && vars.EC2_INSTANCE_ID != ''
+    runs-on: ubuntu-latest
+    env:
+      INSTANCE: ${{ vars.EC2_INSTANCE_ID }}
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ZONE: ${{ vars.CLOUDFLARE_ZONE_ID }}
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ap-south-1
+
+      - name: Run deploy script on the server
+        run: |
+          cmd='cd /home/ubuntu/mlrit-final && sudo -u ubuntu git fetch --depth 1 origin main && sudo -u ubuntu git reset --hard origin/main && sudo -u ubuntu -H bash deploy/deploy.sh'
+          id=$(aws ssm send-command \
+            --instance-ids "$INSTANCE" \
+            --document-name AWS-RunShellScript \
+            --comment "deploy ${GITHUB_SHA::7}" \
+            --timeout-seconds 1800 \
+            --parameters "$(jq -nc --arg c "$cmd" '{commands:[$c],executionTimeout:["1800"]}')" \
+            --query Command.CommandId --output text)
+          while s=$(aws ssm get-command-invocation --command-id "$id" --instance-id "$INSTANCE" --query Status --output text 2>/dev/null || echo Pending); [ "$s" = Pending ] || [ "$s" = InProgress ] || [ "$s" = Delayed ]; do sleep 15; done
+          aws ssm get-command-invocation --command-id "$id" --instance-id "$INSTANCE" \
+            --query '[StandardOutputContent,StandardErrorContent]' --output text
+          test "$s" = Success
+
+      - name: Purge Cloudflare cache
+        # Optional: runs only when the token secret and zone variable exist.
+        if: env.CF_TOKEN != '' && env.CF_ZONE != ''
+        run: |
+          curl -fsS -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE/purge_cache" \
+            -H "Authorization: Bearer $CF_TOKEN" -H "Content-Type: application/json" \
+            --data '{"purge_everything":true}'
