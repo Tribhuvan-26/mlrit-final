@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 type Circular = {
   title: string;
   file: string;
+  href?: string;
   category: 'Timetable' | 'Fee' | 'Results' | 'Notice' | 'Condonation';
   date: string;
 };
@@ -190,6 +191,175 @@ const CIRCULARS: Circular[] = [
     category: 'Notice',
     date: 'September 1, 2026',
   },
+  // ── August 2026 ────────────────────────────────────────────────────────────
+  {
+    title: 'I B.Tech II Sem, I B.Tech I Sem and IV B.Tech II Sem June/July 2026 Examinations - Revaluation Results and Challenge Valuation',
+    file: 'I-B.Tech.-II-Sem.-Regular-Supply-and-I-B.Tech.-I-Sem.-Supply-and-IV-B.Tech.-II-Sem.-Advanced-Supply-Examinations-June-or-July-2026-Revaluation-Results-and-Opportunity-Challenge-Valuation.pdf',
+    category: 'Results',
+    date: 'August 27, 2026',
+  },
+  {
+    title: 'Revised II B.Tech I Sem R22 Regulation CIE-I Examinations August 2026 Timetable (Re-Registered Students)',
+    file: 'Revised-II-B.Tech.-I-Semester-R22-Regulation-CIE-I-Examinations-August-2026-Timetable-for-Re-Registered-Students.pdf',
+    category: 'Timetable',
+    date: 'August 24, 2026',
+  },
+  {
+    title: 'II, III & IV B.Tech I Sem R22 - Extension of Re-Registration for Internal Failed Subjects',
+    file: 'Extension-of-Last-Date-for-Re-Registration-of Internal-Failed-Subjects-of-II-III-and-IV-B.Tech.-I-Sem.-R22-Regulations.pdf',
+    category: 'Notice',
+    date: 'August 22, 2026',
+  },
+  {
+    title: 'I B.Tech I Sem R22 - Re-Registration for Internal Failed Subjects',
+    file: 'I-B.Tech.-I-Semester-R22-Regulations-Re-Registration-for-Internal-Failed-Subjects.pdf',
+    category: 'Notice',
+    date: 'August 22, 2026',
+  },
+  {
+    title: 'I MBA II Sem R25 Regulation CBT Examinations August 2026 Timetable',
+    file: 'I-MBA-II-Semester-R25-Regulation-CBT-Examinations-August-2026-Timetable.pdf',
+    category: 'Timetable',
+    date: 'August 22, 2026',
+  },
+  {
+    title: 'Postponement and Reschedule of IV B.Tech I Sem MID-I and II B.Tech I Sem MID-I Examinations',
+    file: 'Postponement-and-Reschedule-of-IV-B.Tech-I-Sem-MID-I-and-II-B.Tech-I-Sem-MID-I-Exam-Schedule-August-2026.pdf',
+    category: 'Notice',
+    date: 'August 22, 2026',
+  },
+  {
+    title: 'Autonomous MBA R22 - Opportunity Awarding of Grace Marks (Last Date: 24-08-2026)',
+    file: 'Autonomous-MBA-R22-Regulation-Opportunity-Awarding-of-Grace-Marks-and-Last-Date-for-Submission-is-24-08-2026.pdf',
+    category: 'Condonation',
+    date: 'August 20, 2026',
+  },
+  {
+    title: 'II MBA and M.Tech July 2026 Examinations - Results and Revaluation Notification',
+    file: 'II-MBA-I-and-II-Sem.-Regular-and-Supply-II-M.Tech.-I-Sem.-Supply-Examinations-July-2026-Results-Declaration-and-Revaluation-Notification-and-Last-Date-for-Revaluation-is-22-08-2026.pdf',
+    category: 'Results',
+    date: 'August 19, 2026',
+  },
+  {
+    title: 'Autonomous Examinations - Opportunity Awarding of Grace Marks (Last Date: 25-08-2026)',
+    file: 'Autonomous-Opportunity-Awarding-of-Grace-Marks-and-Last-Date-for-Submission-is-25-08-2026.pdf',
+    category: 'Condonation',
+    date: 'August 19, 2026',
+  },
+  {
+    title: 'Collection of Grade Memo',
+    file: 'collection-of-grade-memo.pdf',
+    category: 'Notice',
+    date: 'August 18, 2026',
+  },
+  {
+    title: 'II B.Tech I Sem R25 CIE-I Examinations August 2026 - Substitute Subjects for Readmitted Students',
+    file: 'II-B.Tech-I-Sem-R25-CIE-I-Examinations-August-2026-for-Substitute-Subjects-of-Readmitted-Students-Timetable.pdf',
+    category: 'Timetable',
+    date: 'August 13, 2026',
+  },
+  {
+    title: 'II B.Tech I Sem R22 Regulation CIE-I Examinations August 2026 Timetable (Re-Registered Students)',
+    file: 'II-B.Tech.-I-Semester-R22-Regulation-CIE-I-Examinations-August-2026-Timetable-for-Re-Registered-Students.pdf',
+    category: 'Timetable',
+    date: 'August 13, 2026',
+  },
+  {
+    title: 'III B.Tech I Sem R22 CIE-I Examinations August 2026 - Substitute Subjects for Readmitted Students',
+    file: 'III-B.Tech-I-Sem-R22-CIE-I-Examinations-August-2026-for-Substitute-Subjects-of-Readmitted-Students-Timetable.pdf',
+    category: 'Timetable',
+    date: 'August 13, 2026',
+  },
+  {
+    title: 'I, II, III & IV B.Tech I Sem R22 - Re-Registration for Internal Failed Subjects',
+    file: 'B.Tech I Sem Re-Registration R22 Regulation.pdf',
+    category: 'Notice',
+    date: 'August 11, 2026',
+  },
+  {
+    title: 'I MBA II Sem R25 Regular CBT Examinations August 2026 Fee Notification',
+    file: 'I-MBA-II-Semester-R25-Regular-CBT-Examinations-August-2026-Fee-Notification.pdf',
+    category: 'Fee',
+    date: 'August 11, 2026',
+  },
+  {
+    title: 'II B.Tech II and I Sem Regular/Supply Examinations June 2026 - Revaluation Results and Challenge Valuation',
+    file: 'II-B.Tech.-II-and-I-Sem-Regular-and-Supply-Examinations-June-2026-Revaluation-Results-and-Opportunity-Challenge-Valuation.pdf',
+    category: 'Results',
+    date: 'August 8, 2026',
+  },
+  {
+    title: 'I M.Tech and MBA II Sem - Verify CIE-II and Final Internal Marks (Last Date: 13-08-2026)',
+    file: 'I-M.Tech.-and-MBA-II-SEM-Students-are-Verify-your-CIE-II-and-Final-Internal-Marks-in-Autonomous-Portal-Last-Date-for-Verification-is-13-08-2026.pdf',
+    category: 'Notice',
+    date: 'August 7, 2026',
+  },
+  {
+    title: 'II B.Tech I Sem R22 CIE-I Examinations August 2026 Timetable',
+    file: 'II-B.Tech.-I-Sem-R22-CIE-I-Examinations-August-2026-Timetable.pdf',
+    category: 'Timetable',
+    date: 'August 6, 2026',
+  },
+  {
+    title: 'III B.Tech I Sem R22 CIE-I Examinations August 2026 Timetable',
+    file: 'III-B.Tech.-I-Sem-R22-CIE-I-Examinations-August-2026-Timetable.pdf',
+    category: 'Timetable',
+    date: 'August 6, 2026',
+  },
+  {
+    title: 'IV B.Tech I Sem R22 CIE-I Examinations August 2026 Timetable',
+    file: 'IV-B.Tech.-I-Sem-R22-CIE-I-Examinations-August-2026-Timetable.pdf',
+    category: 'Timetable',
+    date: 'August 6, 2026',
+  },
+  {
+    title: 'I MBA II Sem R25 Condonation Fee Circular (Last Date: 08-08-2026)',
+    file: 'I MBA II SEM R25 CONDONATION CIRCULAR.pdf',
+    category: 'Condonation',
+    date: 'August 6, 2026',
+  },
+  {
+    title: 'I M.Tech II Sem R25 Practical Regular Examinations August 2026 Timetable',
+    file: 'I-M.Tech.-II-Sem.-R25-Practical-Regular-Examinations-August-2026-Timetable.pdf',
+    category: 'Timetable',
+    date: 'August 6, 2026',
+  },
+  {
+    title: 'I MBA I Sem R25 Practical Supply Examinations August 2026 Timetable',
+    file: 'I-MBA-I-Sem.-R25-Practical-Supply-Examinations-August-2026-Timetable.pdf',
+    category: 'Timetable',
+    date: 'August 6, 2026',
+  },
+  {
+    title: 'I B.Tech II Sem, I B.Tech I Sem Supply and IV B.Tech II Sem Advanced Supply June/July 2026 Examinations - Results and Revaluation Notification',
+    file: 'I-B.Tech.-II-Sem.-Regular-Supply-and-I-B.Tech.-I-Sem.-Supply-and-IV-B.Tech.-II-Sem.-Advanced-Supply-Examinations-June-or-July-2026-Results-Declaration-and-Revaluation-Notification-and-Last-Date-for-Revaluation.pdf',
+    category: 'Results',
+    date: 'August 5, 2026',
+  },
+  {
+    title: 'B.Tech, M.Tech and MBA - Readmission Circular',
+    file: 'B.Tech.-M.Tech.-and-MBA-Readmission-Circular.pdf',
+    category: 'Notice',
+    date: 'August 1, 2026',
+  },
+  {
+    title: 'B.Tech, M.Tech and MBA - Student Data Verification and Correction (Last Date: 14-08-2026)',
+    file: 'B.Tech.-M.Tech.-and-MBA-Students-Data-Verification-and-Correction-Last-Date-for-Correction-is-14-08-2026.pdf',
+    category: 'Notice',
+    date: 'August 1, 2026',
+  },
+  {
+    title: 'Duration of B.Tech, M.Tech and MBA Programmes',
+    file: 'Duration-of-B.Tech.-M.Tech.-and-MBA-Programmes.pdf',
+    category: 'Notice',
+    date: 'August 1, 2026',
+  },
+  {
+    title: 'II M.Tech II Sem Regular/Supplementary Project Viva-Voce Examinations August 2026 Fee Notification',
+    file: 'II-M.Tech-II-Sem-Regular-and-Supple-Project-Viva-Voce-Examinations-August-2026-Fee-Notification.pdf',
+    category: 'Fee',
+    date: 'August 1, 2026',
+  },
   // ── July 2026 ───────────────────────────────────────────────────────────────
   {
     title: 'I B.Tech II SEM — Verify CBT Marks in Autonomous Portal (Last Date: 25-07-2026)',
@@ -218,12 +388,14 @@ const CIRCULARS: Circular[] = [
   {
     title: 'MBA Special Supplementary OTC End Semester Examinations July–August 2026',
     file: 'FINAL-TIMETABLE-MBA-OTC-2026.pdf',
+    href: '/examinations/timetables/FINAL-TIMETABLE-MBA-OTC-2026.pdf',
     category: 'Timetable',
     date: 'July 2026',
   },
   {
     title: 'B.Tech Special Supplementary OTC End Semester Examinations July–August 2026',
     file: 'FINAL-TIMETABLE-BTECH-OTC-2026.pdf',
+    href: '/examinations/timetables/FINAL-TIMETABLE-BTECH-OTC-2026.pdf',
     category: 'Timetable',
     date: 'July 2026',
   },
@@ -412,7 +584,7 @@ export default async function CircularsPage() {
                     </p>
                   </div>
                   <DocActions
-                    href={`/examinations/circulars/${c.file}`}
+                    href={c.href ?? `/examinations/circulars/${c.file}`}
                     filename={c.file}
                     viewLabel={copy('viewLabel', 'View')}
                     downloadLabel={copy('downloadLabel', 'Download')}
