@@ -567,7 +567,7 @@ export default async function CircularsPage() {
             </h2>
           </Reveal>
 
-          <Stagger className="mt-6 md:mt-10 space-y-3" delay={0.04}>
+          <Stagger className="mt-6 md:mt-10 space-y-3" delay={0.04} amount={0.01}>
             {CIRCULARS.map((c) => (
               <StaggerItem key={c.file}>
                 <div className="bg-white rounded-2xl border border-border px-4 py-3 md:px-5 md:py-4 flex items-center gap-3 md:gap-4 hover:border-secondary/40 transition-colors">
