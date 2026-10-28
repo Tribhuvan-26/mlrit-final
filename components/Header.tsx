@@ -15,8 +15,8 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openMobileItem, setOpenMobileItem] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [watermarkOpacity, setWatermarkOpacity] = useState(0.42);
   const headerRef = useRef<HTMLElement>(null);
+  const watermarkRef = useRef<HTMLImageElement>(null);
 
   const pathname = usePathname();
   const isHome = pathname === '/';
@@ -81,11 +81,14 @@ export default function Header() {
       }
       lastY = y;
 
-      // Watermark fade — full at scrollY 0, gone by scrollY 400
+      // Watermark fade — full at scrollY 0, gone by scrollY 400. Written to
+      // the DOM directly: a state update here re-rendered the whole header on
+      // every scroll event.
       const t = Math.min(1, y / 400);
-      setWatermarkOpacity(0.42 * (1 - t));
+      if (watermarkRef.current) watermarkRef.current.style.opacity = String(0.42 * (1 - t));
     };
 
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -130,6 +133,7 @@ export default function Header() {
             past the hero. `overflow-visible` on the header lets it
             spill downward. */}
         <img
+          ref={watermarkRef}
           src="/vectors/mlrit-logo-colorful.svg"
           alt=""
           aria-hidden
@@ -137,7 +141,7 @@ export default function Header() {
           style={{
             top: '-24px',
             left: '-30px',
-            opacity: watermarkOpacity,
+            opacity: 0.42,
             transition: 'opacity 0.2s linear',
             // Boost the natural brand colours — orange top-leaf, deep green
             // body, bright green edge — instead of desaturating them.

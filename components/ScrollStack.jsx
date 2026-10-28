@@ -62,7 +62,8 @@ const ScrollStack = ({
     });
   }, []);
 
-  /** rAF loop — writes SCALE only. Sticky handles the pin natively. */
+  /** Writes SCALE only. Sticky handles the pin natively. Runs once per frame
+   *  while scrolling (scheduled from the scroll event), not continuously. */
   const tick = useCallback(() => {
     const cards = cardsRef.current;
     const offsets = offsetsRef.current;
@@ -98,7 +99,7 @@ const ScrollStack = ({
         }
       }
     }
-    rafRef.current = requestAnimationFrame(tick);
+    rafRef.current = null;
   }, [
     parsePct,
     stackPosition,
@@ -140,19 +141,23 @@ const ScrollStack = ({
     });
 
     measure();
-    rafRef.current = requestAnimationFrame(tick);
+    const schedule = () => { if (!rafRef.current) rafRef.current = requestAnimationFrame(tick); };
+    schedule();
 
     // Resize handling — only re-measures for the scale calculation; the
     // sticky top uses CSS vh so nothing needs re-writing.
-    const onResize = () => measure();
+    const onResize = () => { measure(); schedule(); };
+    window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', onResize);
-    const ro = new ResizeObserver(measure);
+    const ro = new ResizeObserver(onResize);
     cards.forEach((c) => ro.observe(c));
 
     return () => {
+      window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', onResize);
       ro.disconnect();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
       cardsRef.current = [];
       offsetsRef.current = [];
       completedRef.current = false;
