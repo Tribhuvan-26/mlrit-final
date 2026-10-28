@@ -39,7 +39,7 @@ export default function EwbHero() {
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           className="absolute inset-0 w-full h-full object-cover"
           aria-hidden="true"
         />

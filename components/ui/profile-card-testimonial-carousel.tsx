@@ -70,6 +70,17 @@ export function TestimonialCarousel({ className, testimonials = DEFAULT_TESTIMON
   const [paused, setPaused] = useState(false);
   const desktopVid = useRef<HTMLVideoElement | null>(null);
   const mobileVid  = useRef<HTMLVideoElement | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  // Nothing loads or rotates until the carousel is near the viewport.
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { rootMargin: '400px 0px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   // The CMS can shorten this list while the carousel is mounted, and
   // currentIndex is state that survives that — it would then index past the
@@ -86,22 +97,26 @@ export function TestimonialCarousel({ className, testimonials = DEFAULT_TESTIMON
   useEffect(() => {
     [desktopVid.current, mobileVid.current].forEach((v) => {
       if (!v) return;
+      if (!inView) { v.pause(); return; }
+      // The desktop and mobile layouts are both mounted; only the one that is
+      // actually displayed should download its video.
+      if (v.offsetParent === null) return;
       v.muted = muted;
       v.load();
       const p = v.play();
       if (p && p.catch) p.catch(() => {});
     });
-  }, [safeIndex, muted]);
+  }, [safeIndex, muted, inView]);
 
   // Auto-advance every 4 seconds. Pauses while the user is hovering / interacting
   // so they can actually watch the alumni video.
   useEffect(() => {
-    if (paused) return;
+    if (paused || !inView) return;
     const t = window.setInterval(() => {
       setCurrentIndex((i) => (i + 1) % testimonials.length);
     }, 4000);
     return () => window.clearInterval(t);
-  }, [paused, testimonials.length]);
+  }, [paused, inView, testimonials.length]);
 
   const handleNext = () => { setCurrentIndex((safeIndex + 1) % testimonials.length); };
   const handlePrev = () => { setCurrentIndex((safeIndex - 1 + testimonials.length) % testimonials.length); };
@@ -115,6 +130,7 @@ export function TestimonialCarousel({ className, testimonials = DEFAULT_TESTIMON
 
   return (
     <div
+      ref={rootRef}
       className={cn('w-full max-w-5xl mx-auto px-4', className)}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -138,11 +154,10 @@ export function TestimonialCarousel({ className, testimonials = DEFAULT_TESTIMON
                 ref={desktopVid}
                 className="w-full h-full object-cover"
                 poster={current.poster}
-                autoPlay
                 muted={muted}
                 loop
                 playsInline
-                preload="auto"
+                preload="metadata"
               >
                 <source src={current.videoUrl} type="video/mp4" />
               </video>
@@ -215,11 +230,10 @@ export function TestimonialCarousel({ className, testimonials = DEFAULT_TESTIMON
                 ref={mobileVid}
                 className="w-full h-full object-cover"
                 poster={current.poster}
-                autoPlay
                 muted={muted}
                 loop
                 playsInline
-                preload="auto"
+                preload="metadata"
               >
                 <source src={current.videoUrl} type="video/mp4" />
               </video>
