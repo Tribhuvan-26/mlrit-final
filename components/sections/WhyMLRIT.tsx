@@ -1,5 +1,6 @@
 'use client';
 
+import LazyVideo from '@/components/LazyVideo';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Phone, ArrowRight } from 'lucide-react';
@@ -195,14 +196,12 @@ export default function WhyMLRIT(props: WhyMLRITProps) {
           className="relative"
         >
           <div className="relative overflow-hidden rounded-2xl md:rounded-[24px] bg-ink shadow-[0_40px_90px_-30px_rgba(15,15,15,0.35)] aspect-[3/4] max-h-[640px]">
-            <video
+            <LazyVideo
               key={videoSrc}
               src={videoSrc}
-              autoPlay
               muted
               loop
               playsInline
-              preload="metadata"
               className="absolute inset-0 w-full h-full object-cover"
             />
 

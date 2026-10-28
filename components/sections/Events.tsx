@@ -129,12 +129,19 @@ export default function Events(props: EventsProps) {
   const safeActive = Math.min(active, SLIDE_LIST.length - 1);
   const autoRef  = useRef<number | null>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const sectionRef = useRef<HTMLElement>(null);
+  const visibleRef = useRef(false);
+  const activeRef = useRef(0);
 
+  // Videos play only while the section is on screen. It sits at the bottom of
+  // the home page; playing on mount (and rotating every 8 s) downloaded every
+  // slide's video in the background right after the page loaded.
   const paint = useCallback((i: number) => {
+    activeRef.current = i;
     setActive(i);
     videoRefs.current.forEach((v, idx) => {
       if (!v) return;
-      if (idx === i) {
+      if (idx === i && visibleRef.current) {
         v.muted = true;
         v.playsInline = true;
         const p = v.play();
@@ -164,9 +171,18 @@ export default function Events(props: EventsProps) {
   };
 
   useEffect(() => {
-    paint(0);
-    startAuto();
-    return () => stopAuto();
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        visibleRef.current = e.isIntersecting;
+        paint(activeRef.current);
+        if (e.isIntersecting) startAuto(); else stopAuto();
+      },
+      { rootMargin: '400px 0px' },
+    );
+    io.observe(el);
+    return () => { io.disconnect(); stopAuto(); };
   }, [paint, startAuto]);
 
   useEffect(() => {
@@ -182,6 +198,7 @@ export default function Events(props: EventsProps) {
   return (
     <div id={sectionDomId('home/events')}>
     <section
+      ref={sectionRef}
       id="events"
       className="relative w-full h-screen min-h-[640px] overflow-hidden bg-ink"
       aria-label="Featured events"
@@ -197,7 +214,7 @@ export default function Events(props: EventsProps) {
           muted
           loop
           playsInline
-          preload={i === 0 ? 'auto' : 'metadata'}
+          preload="metadata"
           poster={s.poster}
         >
           <source src={s.video} type="video/mp4" />

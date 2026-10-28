@@ -14,8 +14,21 @@ until they are uploaded.
 Only the `site/` prefix is publicly readable (bucket policy). Payload media
 uploads are not served by this snippet.
 
-`/_next/image` still reads images from the local `public/` folder, so `public/`
-must stay on the server until next/image is pointed at S3.
+`/_next/image` reads its originals from the same bucket (see the location in the
+snippet), and its responses are cached on the server by nginx for a day.
+
+`image-cache.conf` is installed as `/etc/nginx/conf.d/image-cache.conf` (it
+defines the cache and must live in the `http` context, so it cannot be part of
+the snippet). Install both files, then:
+
+```
+sudo mkdir -p /var/cache/nginx/next-image && sudo chown www-data /var/cache/nginx/next-image
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+Check with `curl -sI 'https://mlrit.ac.in/_next/image?url=%2Flegacy%2Fmlrit-logo-main.png&w=384&q=75'`:
+`X-Cache-Status` is `MISS` on the first request and `HIT` after. To clear the
+cache: `sudo rm -rf /var/cache/nginx/next-image/*`.
 
 ## Payload media in S3
 

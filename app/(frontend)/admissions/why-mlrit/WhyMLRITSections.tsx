@@ -1,5 +1,6 @@
 'use client';
 
+import LazyVideo from '@/components/LazyVideo';
 import { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
@@ -274,7 +275,7 @@ function PlacementStory() {
     <section ref={ref} className="relative bg-foreground overflow-hidden" aria-label="Placements that secure futures">
       <div className="absolute inset-0 z-0">
         {!reduced && (
-          <video src="/videos/placements.mp4" autoPlay muted loop playsInline
+          <LazyVideo src="/videos/placements.mp4" muted loop playsInline
             className="w-full h-full object-cover" aria-hidden="true" />
         )}
         <motion.div className="absolute inset-0 bg-foreground"
