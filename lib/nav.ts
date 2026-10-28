@@ -72,6 +72,7 @@ export const NAV_PRIMARY: NavItem[] = [
           { label: 'Hostel',                      href: '/campus/hostels' },
           { label: 'Sports',                      href: '/student-life/sports' },
           { label: 'Transport',                   href: '/campus/transport' },
+          { label: 'Transport Fee Payment',       href: 'https://formbuilder.ccavenue.com/live/kotak-mahindra/kmr-educational-society', external: true },
         ],
       },
       {
