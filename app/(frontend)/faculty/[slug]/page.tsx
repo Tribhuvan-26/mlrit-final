@@ -1,13 +1,17 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { FACULTY, getFacultyBySlug, getAllFacultySlugs } from '@/lib/faculty';
+import { getAllFaculty, getFacultyBySlug } from '@/lib/faculty-store';
 import PageHeader from '@/components/PageHeader';
 import { getSection } from '@/lib/content/client';
 import { asText } from '@/lib/content/sections';
 
-export function generateStaticParams() {
-  return getAllFacultySlugs().map((slug) => ({ slug }));
+// Faculty live in the CMS, so a profile added after the build is rendered on
+// its first visit and every page refreshes within a minute of an edit.
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return (await getAllFaculty()).map((f) => ({ slug: f.slug }));
 }
 
 export async function generateMetadata(
@@ -16,7 +20,7 @@ export async function generateMetadata(
   }
 ): Promise<Metadata> {
   const params = await props.params;
-  const f = getFacultyBySlug(params.slug);
+  const f = await getFacultyBySlug(params.slug);
   if (!f) return { title: 'Faculty — MLRIT' };
   return {
     title: `${f.name} — Faculty — MLRIT`,
@@ -108,7 +112,7 @@ export default async function FacultyProfilePage(
   const c = (row?.content ?? {}) as Record<string, unknown>;
   const copy = (key: string, fallback: string) => asText(c[key], fallback);
   const params = await props.params;
-  const f = getFacultyBySlug(params.slug);
+  const f = await getFacultyBySlug(params.slug);
   if (!f) notFound();
 
   const deptLabel = DEPT_LABELS[f.department] ?? f.department;

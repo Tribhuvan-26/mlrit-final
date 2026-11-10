@@ -13,7 +13,6 @@ import { NAV_PRIMARY } from '@/lib/nav';
 import { DEPARTMENTS } from '@/lib/departments';
 import { DEPT_DATA } from '@/lib/dept-data';
 import { LEAD, MID_STORIES, ARCHIVE, TIER_STORIES } from '@/lib/chronicles';
-import { FACULTY } from '@/lib/faculty';
 import { SYLLABUS_DATA } from '@/lib/syllabus-data';
 import { RESEARCH_NAV } from '@/lib/research';
 import { RECRUITERS, YEAR_STATS } from '@/lib/placements';
@@ -140,6 +139,20 @@ function getTier(item: SearchItem, q: string): number {
   return exact ? 8 : 9;
 }
 
+// Typo-tolerant matching — kept tight (low threshold) so it only adds genuine
+// near-misses. Results from this are MERGED with literal matches (not used
+// only when literal matching finds nothing), so the full relevant set is
+// always gathered — ranking then decides order, never which ones to drop.
+const FUSE_OPTIONS = {
+  keys: [
+    { name: 'title', weight: 0.5 },
+    { name: 'description', weight: 0.3 },
+    { name: 'category', weight: 0.1 },
+    { name: 'keywords', weight: 0.1 },
+  ],
+  threshold: 0.25,
+};
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function SearchOverlay({
@@ -213,31 +226,6 @@ export default function SearchOverlay({
         category: dept.degree,
         keywords: `${dept.slug} ${dept.code} ${dept.short} engineering technology`,
         exactKeys: [dept.slug, dept.code.toLowerCase(), dept.short.toLowerCase()],
-      });
-    });
-
-    // Faculty — one entry per real faculty record from lib/faculty.ts (209
-    // profiles), linking straight to their own /faculty/[slug] page. Previously
-    // sourced from DEPT_DATA[dept.slug].faculty, which is an empty array in
-    // every department — that made faculty search silently return zero results.
-    const deptShortByKey: Record<string, string> = {};
-    DEPARTMENTS.forEach((dept) => {
-      deptShortByKey[dept.slug] = dept.short;
-    });
-    FACULTY.forEach((person) => {
-      const cleanName = person.name.replace(/^(dr\.|mr\.|mrs\.|ms\.|miss|prof\.)\s+/i, '');
-      const deptShort = deptShortByKey[person.department] ?? person.department.toUpperCase();
-      items.push({
-        title: person.name,
-        description: `${person.designation}${person.isHod ? ' (HOD)' : ''} · ${deptShort}${person.specialization?.[0] ? ` · ${person.specialization[0]}` : ''}`,
-        url: `/faculty/${person.slug}`,
-        type: 'faculty',
-        category: deptShort,
-        keywords: `${person.department} ${deptShort} faculty ${person.subjectsTaught.join(' ')}`,
-        exactKeys: [
-          cleanName.toLowerCase(),
-          ...cleanName.toLowerCase().split(/[\s.]+/).filter((w) => w.length > 2),
-        ],
       });
     });
 
@@ -399,15 +387,43 @@ export default function SearchOverlay({
   // always gathered — ranking then decides order, never which ones to drop.
   const fuse = useRef<Fuse<SearchItem>>(undefined);
   useEffect(() => {
-    fuse.current = new Fuse(searchIndex.current, {
-      keys: [
-        { name: 'title', weight: 0.5 },
-        { name: 'description', weight: 0.3 },
-        { name: 'category', weight: 0.1 },
-        { name: 'keywords', weight: 0.1 },
-      ],
-      threshold: 0.25,
+    fuse.current = new Fuse(searchIndex.current, FUSE_OPTIONS);
+  }, []);
+
+  // Faculty come from the CMS, so they are fetched (a slim list, once) rather
+  // than bundled; they join the index when they arrive.
+  useEffect(() => {
+    let cancelled = false;
+    const deptShortByKey: Record<string, string> = {};
+    DEPARTMENTS.forEach((dept) => {
+      deptShortByKey[dept.slug] = dept.short;
     });
+    fetch('/faculty-search')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((people: { slug: string; name: string; designation: string; isHod: boolean; department: string; specialization: string; subjects: string }[]) => {
+        if (cancelled || !Array.isArray(people) || !people.length) return;
+        people.forEach((person) => {
+          const cleanName = person.name.replace(/^(dr\.|mr\.|mrs\.|ms\.|miss|prof\.)\s+/i, '');
+          const deptShort = deptShortByKey[person.department] ?? person.department.toUpperCase();
+          searchIndex.current.push({
+            title: person.name,
+            description: `${person.designation}${person.isHod ? ' (HOD)' : ''} · ${deptShort}${person.specialization ? ` · ${person.specialization}` : ''}`,
+            url: `/faculty/${person.slug}`,
+            type: 'faculty',
+            category: deptShort,
+            keywords: `${person.department} ${deptShort} faculty ${person.subjects}`,
+            exactKeys: [
+              cleanName.toLowerCase(),
+              ...cleanName.toLowerCase().split(/[\s.]+/).filter((w) => w.length > 2),
+            ],
+          });
+        });
+        fuse.current = new Fuse(searchIndex.current, FUSE_OPTIONS);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Run search — gather every literal (exact/partial) AND fuzzy match, then

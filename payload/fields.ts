@@ -37,7 +37,7 @@ const GALLERY_ITEM_FIELD: Record<GalleryItemField, Field> = {
 };
 
 /** A media slot: a URL or storage key, chosen with the Media browser. */
-const mediaField = (
+export const mediaField = (
   name: string,
   label: string,
   accept: 'image' | 'video' | 'document'

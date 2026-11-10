@@ -15,15 +15,22 @@ const asCategory = (value: unknown): CircularCategory =>
   CIRCULAR_CATEGORIES.find((c) => c.toLowerCase() === asText(value).trim().toLowerCase()) ?? 'Notice';
 
 /**
- * The circulars to show: the CMS rows, or the bundled list while none are
- * saved. Rows missing a title or a file are skipped rather than rendered as a
+ * The circulars to show: every CMS row plus the bundled ones. Saving the list
+ * in the admin used to replace the bundled circulars with whatever was saved,
+ * so the older ones vanished from the page; now they always stay, and a CMS row
+ * for the same file takes the place of its bundled copy (so an edited title or
+ * date wins). Rows missing a title or a file are skipped rather than rendered as a
  * dead card. Newest first by the date text (which may be just a month or a
  * year); the sort is stable, so same-day circulars keep their listed order and
  * a date that cannot be read leaves the row where it is.
  */
 export function circularsFrom(value: unknown): Circular[] {
   const saved = asRepeaterItems(value);
-  const rows: readonly { id: string; [k: string]: unknown }[] = saved.length ? saved : DEFAULT_CIRCULARS;
+  const savedFiles = new Set(saved.map((row) => resolveAssetUrl(asText(row.file).trim())));
+  const rows: readonly { id: string; [k: string]: unknown }[] = [
+    ...saved,
+    ...DEFAULT_CIRCULARS.filter((row) => !savedFiles.has(resolveAssetUrl(row.file))),
+  ];
 
   return rows
     .map((row) => {

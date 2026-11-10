@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    faculty: Faculty;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +79,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    faculty: FacultySelect<false> | FacultySelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -383,6 +385,7 @@ export interface User {
 export interface Media {
   id: number;
   alt?: string | null;
+  prefix?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -405,6 +408,97 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faculty".
+ */
+export interface Faculty {
+  id: number;
+  name: string;
+  /**
+   * For example: Professor, Associate Professor, Head of Department.
+   */
+  designation: string;
+  department: 'cse' | 'cse-ds' | 'aiml' | 'csit' | 'it' | 'ece' | 'eee' | 'mechanical' | 'aeronautical' | 'mba' | 'hs';
+  /**
+   * Shows this person in the "From the HOD's Desk" section of the department page.
+   */
+  isHod?: boolean | null;
+  /**
+   * The message shown in the department's "From the HOD's Desk" section. Leave empty to use the department's general message.
+   */
+  hodMessage?: string | null;
+  /**
+   * image — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
+   */
+  photo?: string | null;
+  /**
+   * Read out by screen readers. Defaults to "Portrait of <name>".
+   */
+  imageAlt?: string | null;
+  /**
+   * For example: M.Tech, Ph.D.
+   */
+  qualifications?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  specialization?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * For example: 8 YEARS.
+   */
+  experience?: string | null;
+  subjectsTaught?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  description?: string | null;
+  publications?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  patents?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  books?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  email?: string | null;
+  profileLinks?: {
+    linkedin?: string | null;
+    googleScholar?: string | null;
+    scopus?: string | null;
+    orcid?: string | null;
+  };
+  empId?: string | null;
+  /**
+   * Lower numbers come first within a department. Ties are sorted by name.
+   */
+  order?: number | null;
+  /**
+   * The profile is at /faculty/<this>. Filled in from the name; leave it alone once the page is shared.
+   */
+  slug?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -437,6 +531,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'faculty';
+        value: number | Faculty;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -512,6 +610,7 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  prefix?: T;
   _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -538,6 +637,71 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faculty_select".
+ */
+export interface FacultySelect<T extends boolean = true> {
+  name?: T;
+  designation?: T;
+  department?: T;
+  isHod?: T;
+  hodMessage?: T;
+  photo?: T;
+  imageAlt?: T;
+  qualifications?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  specialization?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  experience?: T;
+  subjectsTaught?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  description?: T;
+  publications?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  patents?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  books?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  email?: T;
+  profileLinks?:
+    | T
+    | {
+        linkedin?: T;
+        googleScholar?: T;
+        scopus?: T;
+        orcid?: T;
+      };
+  empId?: T;
+  order?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -589,11 +753,11 @@ export interface HomeHero {
   headlineAccent?: string | null;
   body?: string | null;
   /**
-   * video — upload under Media, then paste its URL here. A rooted path (/legacy/…) or an external URL also works.
+   * video — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
    */
   film?: string | null;
   /**
-   * image — upload under Media, then paste its URL here. A rooted path (/legacy/…) or an external URL also works.
+   * image — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
    */
   poster?: string | null;
   _status?: ('draft' | 'published') | null;
@@ -636,7 +800,7 @@ export interface HomeAchievement {
   logos?:
     | {
         /**
-         * image — upload under Media, then paste its URL here. A rooted path (/legacy/…) or an external URL also works.
+         * image — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
          */
         key?: string | null;
         name?: string | null;
@@ -719,7 +883,7 @@ export interface HomeWhyMlrit {
   body?: string | null;
   footnote?: string | null;
   /**
-   * video — upload under Media, then paste its URL here. A rooted path (/legacy/…) or an external URL also works.
+   * video — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
    */
   video?: string | null;
   _status?: ('draft' | 'published') | null;
@@ -739,7 +903,7 @@ export interface HomeSuccessStory {
   cards?:
     | {
         /**
-         * image — upload under Media, then paste its URL here. A rooted path (/legacy/…) or an external URL also works.
+         * image — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
          */
         key?: string | null;
         season?: string | null;
@@ -769,7 +933,7 @@ export interface HomeTestimonial {
   people?:
     | {
         /**
-         * video — upload under Media, then paste its URL here. A rooted path (/legacy/…) or an external URL also works.
+         * video — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
          */
         key?: string | null;
         name?: string | null;
@@ -795,7 +959,7 @@ export interface HomeEvent {
   slides?:
     | {
         /**
-         * video — upload under Media, then paste its URL here. A rooted path (/legacy/…) or an external URL also works.
+         * video — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
          */
         key?: string | null;
         title?: string | null;
@@ -805,11 +969,11 @@ export interface HomeEvent {
         speaker?: string | null;
         speakerRole?: string | null;
         /**
-         * image — upload under Media, then paste its URL here. A rooted path (/legacy/…) or an external URL also works.
+         * image — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
          */
         logo?: string | null;
         /**
-         * image — upload under Media, then paste its URL here. A rooted path (/legacy/…) or an external URL also works.
+         * image — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
          */
         poster?: string | null;
         /**
@@ -1008,7 +1172,7 @@ export interface PlacementsRecruiter {
   logos?:
     | {
         /**
-         * image — upload under Media, then paste its URL here. A rooted path (/legacy/…) or an external URL also works.
+         * image — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
          */
         key?: string | null;
         name?: string | null;
@@ -1473,7 +1637,7 @@ export interface InfoPage {
 export interface SiteDocument {
   id: number;
   /**
-   * PDF — upload under Media, then paste its URL here. A rooted path (/legacy/…) or an external URL also works.
+   * PDF — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
    */
   brochure?: string | null;
   brochureLabel?: string | null;
@@ -1520,6 +1684,22 @@ export interface ExaminationsCertificate {
  */
 export interface ExaminationsCircular {
   id: number;
+  circularList?:
+    | {
+        title?: string | null;
+        category?: ('Timetable' | 'Fee' | 'Results' | 'Notice' | 'Condonation') | null;
+        date?: string | null;
+        /**
+         * PDF — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
+         */
+        file?: string | null;
+        /**
+         * Stable identifier. Generated on save; do not edit.
+         */
+        itemId?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   viewLabel?: string | null;
   downloadLabel?: string | null;
   allDocumentsBelowAre?: string | null;
@@ -1610,7 +1790,7 @@ export interface SiteFooter {
   logos?:
     | {
         /**
-         * image — upload under Media, then paste its URL here. A rooted path (/legacy/…) or an external URL also works.
+         * image — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
          */
         key?: string | null;
         name?: string | null;
@@ -1636,8 +1816,6 @@ export interface SiteFooter {
         id?: string | null;
       }[]
     | null;
-  disclosuresLabel?: string | null;
-  disclosuresHref?: string | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -3163,6 +3341,16 @@ export interface ExaminationsCertificatesSelect<T extends boolean = true> {
  * via the `definition` "examinations-circulars_select".
  */
 export interface ExaminationsCircularsSelect<T extends boolean = true> {
+  circularList?:
+    | T
+    | {
+        title?: T;
+        category?: T;
+        date?: T;
+        file?: T;
+        itemId?: T;
+        id?: T;
+      };
   viewLabel?: T;
   downloadLabel?: T;
   allDocumentsBelowAre?: T;
@@ -3267,8 +3455,6 @@ export interface SiteFooterSelect<T extends boolean = true> {
         itemId?: T;
         id?: T;
       };
-  disclosuresLabel?: T;
-  disclosuresHref?: T;
   _status?: T;
   updatedAt?: T;
   createdAt?: T;
