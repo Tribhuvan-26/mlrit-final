@@ -45,7 +45,7 @@ test('skips rows with no title or no file, and defaults an unknown category to N
 });
 
 test('a link pasted from the bucket becomes a same-site path', () => {
-  const [c] = circularsFrom([row('a', { file: 'https://mlrit-website-assets.s3.ap-south-1.amazonaws.com/site/media/k1/My%20Circular.pdf' })]);
+  const c = circularsFrom([row('a', { file: 'https://mlrit-website-assets.s3.ap-south-1.amazonaws.com/site/media/k1/My%20Circular.pdf' })]).find((x) => x.id === 'a')!;
   assert.equal(c.href, '/media/k1/My%20Circular.pdf');
   assert.equal(c.filename, 'My Circular.pdf');
 });
