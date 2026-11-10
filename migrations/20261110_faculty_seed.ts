@@ -1,4 +1,6 @@
-import type { MigrateUpArgs, MigrateDownArgs } from '@payloadcms/db-postgres'
+import { randomUUID } from 'node:crypto'
+
+import { sql, type MigrateUpArgs, type MigrateDownArgs } from '@payloadcms/db-postgres'
 
 import { DEPT_DATA } from '../lib/dept-data'
 import { FACULTY } from '../lib/faculty'
@@ -16,7 +18,9 @@ const list = (items: string[] | undefined) => (items ?? []).map((value) => ({ va
 const slugify = (text: string) =>
   text.toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
 
-type Seed = Record<string, unknown> & { slug: string }
+type Seed = Record<string, unknown> & { slug: string; name: string; designation: string; department: string }
+
+const pl = (f: Seed, key: string): string | null => ((f.profileLinks as Record<string, string | undefined> | undefined)?.[key]) || null
 
 function buildSeeds(): Seed[] {
   const seeds: Seed[] = []
@@ -81,24 +85,53 @@ function buildSeeds(): Seed[] {
   return seeds
 }
 
-export async function up({ payload, req }: MigrateUpArgs): Promise<void> {
-  const existing = await payload.find({
-    collection: 'faculty',
-    limit: 5000,
-    pagination: false,
-    depth: 0,
-    select: { slug: true },
-    req,
-  })
-  const have = new Set(existing.docs.map((d) => (d as { slug?: string }).slug))
+const chunks = <T,>(items: T[], size: number): T[][] =>
+  Array.from({ length: Math.ceil(items.length / size) }, (_, n) => items.slice(n * size, (n + 1) * size))
 
-  let created = 0
-  for (const seed of buildSeeds()) {
-    if (have.has(seed.slug)) continue
-    await payload.create({ collection: 'faculty', data: seed as never, depth: 0, overrideAccess: true, req })
-    created += 1
+// Set-based inserts: a few statements in all. Creating each person through the
+// Payload API took minutes against the remote database and hit the deploy's
+// migration timeout.
+export async function up({ db, payload }: MigrateUpArgs): Promise<void> {
+  const seeds = buildSeeds()
+  const idBySlug = new Map<string, number>()
+
+  for (const batch of chunks(seeds, 100)) {
+    const values = batch.map(
+      (f) => sql`(${f.name}, ${f.designation}, ${f.department}::"payload"."enum_faculty_department", ${f.isHod ?? false}, ${f.hodMessage ?? null}, ${f.photo ?? null}, ${f.imageAlt ?? null}, ${f.experience ?? null}, ${f.description ?? null}, ${f.email ?? null}, ${pl(f, 'linkedin')}, ${pl(f, 'googleScholar')}, ${pl(f, 'scopus')}, ${pl(f, 'orcid')}, ${f.empId ?? null}, ${f.order ?? 1000}, ${f.slug})`
+    )
+    const res = await db.execute(sql`
+      INSERT INTO "payload"."faculty" ("name", "designation", "department", "is_hod", "hod_message", "photo", "image_alt", "experience", "description", "email", "profile_links_linkedin", "profile_links_google_scholar", "profile_links_scopus", "profile_links_orcid", "emp_id", "order", "slug")
+      VALUES ${sql.join(values, sql`, `)}
+      ON CONFLICT ("slug") DO NOTHING
+      RETURNING "id", "slug"`)
+    for (const row of res.rows as { id: number; slug: string }[]) idBySlug.set(row.slug, row.id)
   }
-  payload.logger.info(`faculty seed: created ${created} of ${buildSeeds().length}`)
+
+  const lists: [string, string][] = [
+    ['faculty_qualifications', 'qualifications'],
+    ['faculty_specialization', 'specialization'],
+    ['faculty_subjects_taught', 'subjectsTaught'],
+    ['faculty_publications', 'publications'],
+    ['faculty_patents', 'patents'],
+    ['faculty_books', 'books'],
+  ]
+  for (const [table, key] of lists) {
+    const rows: { parent: number; order: number; value: string }[] = []
+    for (const f of seeds) {
+      const parent = idBySlug.get(f.slug)
+      if (parent === undefined) continue // already existed: leave its lists alone
+      ;((f[key] as { value: string }[] | undefined) ?? []).forEach((e, n) =>
+        rows.push({ parent, order: n + 1, value: e.value })
+      )
+    }
+    for (const batch of chunks(rows, 400)) {
+      const values = batch.map((r) => sql`(${r.order}, ${r.parent}, ${randomUUID()}, ${r.value})`)
+      await db.execute(sql`
+        INSERT INTO ${sql.raw(`"payload"."${table}"`)} ("_order", "_parent_id", "id", "value")
+        VALUES ${sql.join(values, sql`, `)}`)
+    }
+  }
+  payload.logger.info(`faculty seed: created ${idBySlug.size} of ${seeds.length}`)
 }
 
 // The table itself is dropped by the schema migration's down(); nothing to undo here.
