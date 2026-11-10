@@ -28,7 +28,8 @@ import { getSyllabusCourses } from '@/lib/syllabus-data';
 import { useHideOnScroll } from '@/lib/useHideOnScroll';
 
 type Props = { department: Department; faculty: FacultyProfile[] };
-type PanelProps = { d: Department; data: DeptData; faculty: FacultyProfile[] };
+type PanelProps = { d: Department; data: DeptData };
+type FacultyPanelProps = PanelProps & { faculty: FacultyProfile[] };
 
 const FALLBACK_DATA: DeptData = {
   vision: '',
@@ -419,7 +420,7 @@ function getInitials(name: string): string {
     .toUpperCase();
 }
 
-function OverviewPanel({ d, data, faculty: allFaculty }: PanelProps) {
+function OverviewPanel({ d, data, faculty: allFaculty }: FacultyPanelProps) {
   const hods = allFaculty.filter((f) => f.isHod);
   const primaryHod = hods[0];
   const hodPhoto = primaryHod?.image ?? data.faculty.find((f) => /head|hod/i.test(f.role))?.photo;
@@ -691,7 +692,7 @@ function ObjectivesPanel({ d, data }: PanelProps) {
    Panel 3 — FACULTY PROFILES
    ═════════════════════════════════════════════════════════ */
 
-function FacultyPanel({ d, data, faculty: newFaculty }: PanelProps) {
+function FacultyPanel({ d, data, faculty: newFaculty }: FacultyPanelProps) {
   const subjectMap = data.facultySubjects;
   const [subjectFilter, setSubjectFilter] = useState<string>('all');
 
