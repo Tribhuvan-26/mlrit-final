@@ -7,6 +7,7 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import { buildConfig } from 'payload';
 import sharp from 'sharp';
 
+import { Faculty } from './payload/collections/Faculty';
 import { Media } from './payload/collections/Media';
 import { Users } from './payload/collections/Users';
 import { sectionGlobals } from './payload/globals';
@@ -62,7 +63,7 @@ export default buildConfig({
   // Defaults would be /admin and /api anyway; stated explicitly because the
   // route folders under app/(payload) have to match.
   routes: { admin: '/admin', api: '/api' },
-  collections: [Users, Media],
+  collections: [Users, Media, Faculty],
   globals: sectionGlobals,
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

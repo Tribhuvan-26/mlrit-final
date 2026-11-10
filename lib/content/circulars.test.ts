@@ -14,10 +14,19 @@ test('falls back to the bundled list while no rows are saved', () => {
   assert.equal(circularsFrom([]).length, DEFAULT_CIRCULARS.length);
 });
 
-test('shows saved rows instead of the bundled list', () => {
+test('saved rows are added to the bundled list, never replacing it', () => {
   const out = circularsFrom([row('a')]);
-  assert.equal(out.length, 1);
-  assert.deepEqual([out[0].title, out[0].category, out[0].href, out[0].filename], ['Circular a', 'Fee', '/examinations/circulars/a.pdf', 'a.pdf']);
+  assert.equal(out.length, DEFAULT_CIRCULARS.length + 1);
+  const a = out.find((c) => c.id === 'a')!;
+  assert.deepEqual([a.title, a.category, a.href, a.filename], ['Circular a', 'Fee', '/examinations/circulars/a.pdf', 'a.pdf']);
+});
+
+test('a saved row for a bundled file replaces that bundled copy', () => {
+  const d = DEFAULT_CIRCULARS[0];
+  const out = circularsFrom([{ id: 'edited', title: 'Edited title', category: 'Notice', date: d.date, file: d.file }]);
+  assert.equal(out.length, DEFAULT_CIRCULARS.length);
+  assert.equal(out.filter((c) => c.href === d.file).length, 1);
+  assert.equal(out.find((c) => c.href === d.file)!.title, 'Edited title');
 });
 
 test('sorts newest first, keeps same-day order, and reads month-only dates', () => {
@@ -27,12 +36,12 @@ test('sorts newest first, keeps same-day order, and reads month-only dates', () 
     row('new2', { date: 'October 29, 2026' }),
     row('mid', { date: 'September 1, 2026' }),
   ]);
-  assert.deepEqual(out.map((c) => c.id), ['new1', 'new2', 'mid', 'old']);
+  assert.deepEqual(out.map((c) => c.id).filter((id) => ['old', 'new1', 'new2', 'mid'].includes(id)), ['new1', 'new2', 'mid', 'old']);
 });
 
 test('skips rows with no title or no file, and defaults an unknown category to Notice', () => {
   const out = circularsFrom([row('a', { title: '  ' }), row('b', { file: '' }), row('c', { category: 'whatever' }), row('d', { category: 'timetable' })]);
-  assert.deepEqual(out.map((c) => [c.id, c.category]), [['c', 'Notice'], ['d', 'Timetable']]);
+  assert.deepEqual(out.filter((c) => ['a', 'b', 'c', 'd'].includes(c.id)).map((c) => [c.id, c.category]), [['c', 'Notice'], ['d', 'Timetable']]);
 });
 
 test('a link pasted from the bucket becomes a same-site path', () => {

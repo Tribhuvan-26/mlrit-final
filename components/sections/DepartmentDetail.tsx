@@ -20,14 +20,15 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import type { Department } from '@/lib/departments';
 import { DEPT_DATA, type DeptData } from '@/lib/dept-data';
-import { getFacultyByDepartment, type FacultyProfile } from '@/lib/faculty';
+import type { FacultyProfile } from '@/lib/faculty';
+import { hasProfile } from '@/lib/faculty-shared';
 import DepartmentHero from '@/components/sections/DepartmentHero';
 import DeptIntakeChart from '@/components/DeptIntakeChart';
 import { getSyllabusCourses } from '@/lib/syllabus-data';
 import { useHideOnScroll } from '@/lib/useHideOnScroll';
 
-type Props = { department: Department };
-type PanelProps = { d: Department; data: DeptData };
+type Props = { department: Department; faculty: FacultyProfile[] };
+type PanelProps = { d: Department; data: DeptData; faculty: FacultyProfile[] };
 
 const FALLBACK_DATA: DeptData = {
   vision: '',
@@ -107,7 +108,7 @@ const QUICK_NAV: Record<TabId, { id: string; label: string }[]> = {
   ],
 };
 
-export default function DepartmentDetail({ department: d }: Props) {
+export default function DepartmentDetail({ department: d, faculty }: Props) {
   const [tab, setTab] = useState<TabId>('overview');
   const [activeNav, setActiveNav] = useState<string>('intro');
   const navHidden = useHideOnScroll();
@@ -283,9 +284,9 @@ export default function DepartmentDetail({ department: d }: Props) {
 
           {/* Panels */}
           <div className="min-w-0">
-            {tab === 'overview'     && <OverviewPanel d={d} data={data} />}
+            {tab === 'overview'     && <OverviewPanel d={d} data={data} faculty={faculty} />}
             {tab === 'objectives'   && <ObjectivesPanel d={d} data={data} />}
-            {tab === 'faculty'      && <FacultyPanel d={d} data={data} />}
+            {tab === 'faculty'      && <FacultyPanel d={d} data={data} faculty={faculty} />}
             {tab === 'academics'    && <AcademicsPanel d={d} data={data} />}
             {tab === 'achievements' && <AchievementsPanel d={d} data={data} />}
             {tab === 'publications' && <PublicationsPanel data={data} />}
@@ -418,8 +419,7 @@ function getInitials(name: string): string {
     .toUpperCase();
 }
 
-function OverviewPanel({ d, data }: PanelProps) {
-  const allFaculty = getFacultyByDepartment(d.slug);
+function OverviewPanel({ d, data, faculty: allFaculty }: PanelProps) {
   const hods = allFaculty.filter((f) => f.isHod);
   const primaryHod = hods[0];
   const hodPhoto = primaryHod?.image ?? data.faculty.find((f) => /head|hod/i.test(f.role))?.photo;
@@ -480,7 +480,7 @@ function OverviewPanel({ d, data }: PanelProps) {
                   className="font-display italic leading-[1.85] text-foreground/82"
                   style={{ fontSize: 'clamp(0.97rem, 1.3vw, 1.1rem)' }}
                 >
-                  &ldquo;{idx === 0 ? message : (data.hod2Message ?? hodFaculty.description ?? message)}&rdquo;
+                  &ldquo;{hodFaculty.hodMessage || (idx === 0 ? message : (data.hod2Message ?? hodFaculty.description ?? message))}&rdquo;
                 </blockquote>
 
                 <div className="flex items-center gap-3 pt-1">
@@ -691,8 +691,7 @@ function ObjectivesPanel({ d, data }: PanelProps) {
    Panel 3 — FACULTY PROFILES
    ═════════════════════════════════════════════════════════ */
 
-function FacultyPanel({ d, data }: PanelProps) {
-  const newFaculty = getFacultyByDepartment(d.slug);
+function FacultyPanel({ d, data, faculty: newFaculty }: PanelProps) {
   const subjectMap = data.facultySubjects;
   const [subjectFilter, setSubjectFilter] = useState<string>('all');
 
@@ -742,14 +741,12 @@ function FacultyPanel({ d, data }: PanelProps) {
         <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
           {visibleFaculty.map((f: FacultyProfile) => {
             const initials = getInitials(f.name);
-            return (
-              <Link
-                key={f.slug}
-                href={`/faculty/${f.slug}`}
-                className="group relative aspect-[3/4] rounded-xl overflow-hidden shadow-card-soft hover:shadow-card-strong transition-shadow duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
-                style={{ background: 'linear-gradient(135deg, #2a2f40, #3a4050)' }}
-                aria-label={`View profile of ${f.name}`}
-              >
+            const linked = hasProfile(f);
+            const cardClass =
+              'group relative aspect-[3/4] rounded-xl overflow-hidden shadow-card-soft hover:shadow-card-strong transition-shadow duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2';
+            const cardStyle = { background: 'linear-gradient(135deg, #2a2f40, #3a4050)' };
+            const inner = (
+              <>
                 {f.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -780,12 +777,21 @@ function FacultyPanel({ d, data }: PanelProps) {
                         {f.specialization.slice(0, 2).join(' · ')}
                       </div>
                     )}
-                    <div className="mt-5 inline-block px-4 py-1.5 rounded-md border border-white/30 text-white text-[0.7rem] font-bold">
-                      View profile
-                    </div>
+                    {linked && (
+                      <div className="mt-5 inline-block px-4 py-1.5 rounded-md border border-white/30 text-white text-[0.7rem] font-bold">
+                        View profile
+                      </div>
+                    )}
                   </div>
                 </div>
+              </>
+            );
+            return linked ? (
+              <Link key={f.slug} href={`/faculty/${f.slug}`} className={cardClass} style={cardStyle} aria-label={`View profile of ${f.name}`}>
+                {inner}
               </Link>
+            ) : (
+              <div key={f.slug} className={cardClass} style={cardStyle}>{inner}</div>
             );
           })}
         </div>

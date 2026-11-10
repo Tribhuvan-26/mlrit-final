@@ -1,4 +1,7 @@
-// AUTO-GENERATED — do not edit manually.
+// Bundled faculty list. This was the source until the Payload `faculty`
+// collection took over (the faculty seed migration copied it in); it is now
+// the fallback in lib/faculty-store.ts and what the chatbot indexes. Edit faculty
+// in the admin, not here.
 
 export interface FacultyProfile {
   id: string;
@@ -25,6 +28,8 @@ export interface FacultyProfile {
   image?: string;
   imageAlt: string;
   empId?: string;
+  /** The HOD's own message for the department page; only set for heads of department. */
+  hodMessage?: string;
 }
 
 export const FACULTY: FacultyProfile[] = [
