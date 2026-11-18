@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
-export default function OldContentPage({ params }: { params: { slug: string[] } }) {
-  const path = params.slug.join('/');
+export default async function OldContentPage({ params }: { params: Promise<{ slug: string[] }> }) {
+  const { slug } = await params;
+  const path = slug.join('/');
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
