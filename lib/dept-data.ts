@@ -982,6 +982,7 @@ export const DEPT_DATA: Record<string, DeptData> = {
       'neela-praveen-kumar-hs': 'Mathematics',
       'sujatha-mannava-hs': 'Mathematics',
       'amrita-saha-hs': 'Chemistry',
+      'harika-patnala-hs': 'Chemistry',
       'monaj-karar-hs': 'Chemistry',
       'mopur-vijaya-bhaskar-reddy-hs': 'Chemistry',
       'srinivas-indla-hs': 'Chemistry',
