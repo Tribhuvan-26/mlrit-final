@@ -5,6 +5,7 @@ import * as migration_20261104_125754_examinations_circulars_media from './20261
 import * as migration_20261110_062720_faculty_cms from './20261110_062720_faculty_cms';
 import * as migration_20261110_faculty_seed from './20261110_faculty_seed';
 import * as migration_20261110_october_circulars from './20261110_october_circulars';
+import * as migration_20261118_harika_patnala_full_profile from './20261118_harika_patnala_full_profile';
 
 export const migrations = [
   {
@@ -41,6 +42,11 @@ export const migrations = [
     up: migration_20261110_october_circulars.up,
     down: migration_20261110_october_circulars.down,
     name: '20261110_october_circulars',
+  },
+  {
+    up: migration_20261118_harika_patnala_full_profile.up,
+    down: migration_20261118_harika_patnala_full_profile.down,
+    name: '20261118_harika_patnala_full_profile',
   },
 ];
 
