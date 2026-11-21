@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
+import { downloadsFrom } from '@/lib/content/downloads';
+
 /* ── Shared primitives ──────────────────────────────────────────── */
 
 const SECTION_CLASS = 'w-full px-4 md:px-10 lg:px-12 py-8 md:py-20';
@@ -690,25 +692,33 @@ export function Publications() {
 
 /* ── 9 · Downloads ──────────────────────────────────────────────── */
 
-/**
- * `file` is the document itself, served from /research/downloads/ (the bucket).
- * A document with no file yet is requested from the R&D Cell by email.
- */
-const DOWNLOADS: { title: string; file?: string }[] = [
-  { title: 'Publication Incentive Form', file: '/research/downloads/publication-incentive-form.pdf' },
-  { title: 'Patent Filing / Invention Disclosure Form', file: '/research/downloads/invention-disclosure-form.pdf' },
-  { title: 'Sponsored Project Proposal Form' },
-  { title: 'Consultancy Agreement Template' },
-  { title: 'Patent Incentive Claim Form' },
-  { title: 'Travel Support — Conference Form' },
-  { title: 'Research Incentive Scheme (Full Document)' },
-  { title: 'R&D Policy Document', file: '/research/downloads/research-and-development-policy.pdf' },
-  { title: 'IP Policy Document', file: '/research/downloads/ip-policy.pdf' },
-  { title: 'Consultancy Policy Document', file: '/research/downloads/consultancy-policy.pdf' },
-  { title: 'Innovation & Entrepreneurship Policy', file: '/research/downloads/innovation-and-entrepreneurship-policy.pdf' },
-];
+export type DownloadsProps = {
+  eyebrow?: string;
+  titleLead?: string;
+  titleAccent?: string;
+  intro?: string;
+  email?: string;
+  note?: string;
+  /** Repeater rows from research/downloads; the bundled list is used while it is empty. */
+  documents?: unknown;
+};
 
-export function Downloads() {
+/**
+ * Every text and the document list come from the CMS section research/downloads
+ * (edited under Research, Downloads in the admin). A document with a file gets a
+ * Download link; one without gets a Request link that emails the R&D Cell.
+ */
+export function Downloads({
+  eyebrow = '09 · Downloads',
+  titleLead = 'Forms and documents',
+  titleAccent = 'for researchers.',
+  intro = 'Forms and policy documents with a download link are ready to open; for any other document, request it from the R&D Cell by writing to',
+  email = 'deanresearch@mlrit.ac.in',
+  note = 'Documents are dispatched within two working days of request.',
+  documents,
+}: DownloadsProps) {
+  const items = downloadsFrom(documents);
+
   return (
     <section id="downloads" className={`${SECTION_CLASS} bg-white`}>
       <motion.div
@@ -718,31 +728,30 @@ export function Downloads() {
         viewport={{ once: true, margin: '-60px' }}
       >
         <motion.div variants={fadeUp}>
-          <Eyebrow>09 · Downloads</Eyebrow>
+          <Eyebrow>{eyebrow}</Eyebrow>
           <SectionTitle>
-            Forms and documents{' '}
-            <em className="font-display italic font-medium text-primary">for researchers.</em>
+            {titleLead}{' '}
+            <em className="font-display italic font-medium text-primary">{titleAccent}</em>
           </SectionTitle>
           <Dek>
-            Forms and policy documents with a download link are ready to open; for any other document,
-            request it from the R&amp;D Cell by writing to{' '}
-            <a href="mailto:deanresearch@mlrit.ac.in" className="text-primary hover:underline">
-              deanresearch@mlrit.ac.in
+            {intro}{' '}
+            <a href={`mailto:${email}`} className="text-primary hover:underline">
+              {email}
             </a>.
           </Dek>
         </motion.div>
 
         <motion.div variants={fadeUp} className="mt-6 md:mt-10 max-w-[780px]">
           <ul className="divide-y divide-border rounded-2xl border border-border overflow-hidden bg-white">
-            {DOWNLOADS.map((d, i) => (
-              <li key={d.title} className="flex items-center gap-4 px-4 py-3 md:px-6 md:py-4 hover:bg-cream-2 transition-colors group">
+            {items.map((d, i) => (
+              <li key={d.id} className="flex items-center gap-4 px-4 py-3 md:px-6 md:py-4 hover:bg-cream-2 transition-colors group">
                 <span className="font-mono text-[0.62rem] font-bold tracking-[0.16em] text-muted/60 w-6 shrink-0 tabular-nums">
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <span className="flex-1 font-sans text-[0.93rem] text-foreground">{d.title}</span>
-                {d.file ? (
+                {d.href ? (
                   <a
-                    href={d.file}
+                    href={d.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[0.8rem] font-semibold text-primary hover:underline whitespace-nowrap"
@@ -752,7 +761,7 @@ export function Downloads() {
                   </a>
                 ) : (
                   <a
-                    href={`mailto:deanresearch@mlrit.ac.in?subject=${encodeURIComponent(`Request: ${d.title}`)}`}
+                    href={`mailto:${email}?subject=${encodeURIComponent(`Request: ${d.title}`)}`}
                     className="text-[0.8rem] font-semibold text-primary hover:underline whitespace-nowrap"
                     aria-label={`Request ${d.title}`}
                   >
@@ -762,9 +771,7 @@ export function Downloads() {
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-muted text-[0.82rem] italic">
-            Documents are dispatched within two working days of request.
-          </p>
+          <p className="mt-4 text-muted text-[0.82rem] italic">{note}</p>
         </motion.div>
       </motion.div>
     </section>
