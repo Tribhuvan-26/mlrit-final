@@ -9,6 +9,7 @@ import {
   type GalleryItemField,
   type RepeaterItemField,
 } from '@/lib/content/sections';
+import { scheduleDateMessage } from '@/lib/content/schedule';
 import { transientMediaMessage } from '@/lib/content/validate';
 
 /**
@@ -31,9 +32,21 @@ const GALLERY_ITEM_FIELD: Record<GalleryItemField, Field> = {
   name: { name: 'name', type: 'text', label: 'Name' },
   title: { name: 'title', type: 'text', label: 'Title' },
   linkUrl: { name: 'linkUrl', type: 'text', label: 'Link URL' },
-  active: { name: 'active', type: 'checkbox', label: 'Active', defaultValue: true },
-  startDate: { name: 'startDate', type: 'text', label: 'Start date' },
-  endDate: { name: 'endDate', type: 'text', label: 'End date' },
+  active: { name: 'active', type: 'checkbox', label: 'Active', defaultValue: true, admin: { description: 'Untick to hide without deleting.' } },
+  startDate: {
+    name: 'startDate',
+    type: 'text',
+    label: 'Start date',
+    validate: scheduleDateMessage,
+    admin: { description: 'Optional. YYYY-MM-DD. Hidden until this day begins (India time).' },
+  },
+  endDate: {
+    name: 'endDate',
+    type: 'text',
+    label: 'End date',
+    validate: scheduleDateMessage,
+    admin: { description: 'Optional. YYYY-MM-DD. Shown through the end of this day (India time), then hidden.' },
+  },
 };
 
 /** A media slot: a URL or storage key, chosen with the Media browser. */

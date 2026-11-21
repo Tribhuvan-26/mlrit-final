@@ -18,6 +18,7 @@ try {
     'lib/content/sections.ts',
     'lib/content/validate.test.ts',
     'lib/content/circulars.test.ts',
+    'lib/content/schedule.test.ts',
     '--outDir',
     outputDir,
     '--module',
@@ -29,7 +30,7 @@ try {
   ]);
 
   writeFileSync(`${outputDir}/package.json`, JSON.stringify({ type: 'commonjs' }));
-  run(['--test', `${outputDir}/content/validate.test.js`, `${outputDir}/content/circulars.test.js`, 'tests/font-pipeline.test.mjs']);
+  run(['--test', `${outputDir}/content/validate.test.js`, `${outputDir}/content/circulars.test.js`, `${outputDir}/content/schedule.test.js`, 'tests/font-pipeline.test.mjs']);
 } finally {
   rmSync(outputDir, { recursive: true, force: true });
 }
