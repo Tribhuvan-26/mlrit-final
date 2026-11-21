@@ -29,7 +29,7 @@ export function downloadsFrom(value: unknown): DownloadItem[] {
   const rows: readonly { id: string; [k: string]: unknown }[] = saved.length ? saved : DEFAULT_DOWNLOADS;
 
   return rows
-    .map((row) => {
+    .map((row): DownloadItem | null => {
       const title = asText(row.title).trim();
       if (!title) return null;
       const href = resolveAssetUrl(asText(row.file).trim());
