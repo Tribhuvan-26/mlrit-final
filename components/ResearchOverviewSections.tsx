@@ -690,18 +690,22 @@ export function Publications() {
 
 /* ── 9 · Downloads ──────────────────────────────────────────────── */
 
-const DOWNLOADS = [
-  'Publication Incentive Form',
-  'Patent Filing / Invention Disclosure Form',
-  'Sponsored Project Proposal Form',
-  'Consultancy Agreement Template',
-  'Patent Incentive Claim Form',
-  'Travel Support — Conference Form',
-  'Research Incentive Scheme (Full Document)',
-  'R&D Policy Document',
-  'IP Policy Document',
-  'Consultancy Policy Document',
-  'Innovation & Entrepreneurship Policy',
+/**
+ * `file` is the document itself, served from /research/downloads/ (the bucket).
+ * A document with no file yet is requested from the R&D Cell by email.
+ */
+const DOWNLOADS: { title: string; file?: string }[] = [
+  { title: 'Publication Incentive Form', file: '/research/downloads/publication-incentive-form.pdf' },
+  { title: 'Patent Filing / Invention Disclosure Form', file: '/research/downloads/invention-disclosure-form.pdf' },
+  { title: 'Sponsored Project Proposal Form' },
+  { title: 'Consultancy Agreement Template' },
+  { title: 'Patent Incentive Claim Form' },
+  { title: 'Travel Support — Conference Form' },
+  { title: 'Research Incentive Scheme (Full Document)' },
+  { title: 'R&D Policy Document', file: '/research/downloads/research-and-development-policy.pdf' },
+  { title: 'IP Policy Document', file: '/research/downloads/ip-policy.pdf' },
+  { title: 'Consultancy Policy Document', file: '/research/downloads/consultancy-policy.pdf' },
+  { title: 'Innovation & Entrepreneurship Policy', file: '/research/downloads/innovation-and-entrepreneurship-policy.pdf' },
 ];
 
 export function Downloads() {
@@ -720,8 +724,8 @@ export function Downloads() {
             <em className="font-display italic font-medium text-primary">for researchers.</em>
           </SectionTitle>
           <Dek>
-            All research-related forms and policy documents are available through the R&amp;D Cell.
-            Request any document by writing to{' '}
+            Forms and policy documents with a download link are ready to open; for any other document,
+            request it from the R&amp;D Cell by writing to{' '}
             <a href="mailto:deanresearch@mlrit.ac.in" className="text-primary hover:underline">
               deanresearch@mlrit.ac.in
             </a>.
@@ -731,18 +735,30 @@ export function Downloads() {
         <motion.div variants={fadeUp} className="mt-6 md:mt-10 max-w-[780px]">
           <ul className="divide-y divide-border rounded-2xl border border-border overflow-hidden bg-white">
             {DOWNLOADS.map((d, i) => (
-              <li key={d} className="flex items-center gap-4 px-4 py-3 md:px-6 md:py-4 hover:bg-cream-2 transition-colors group">
+              <li key={d.title} className="flex items-center gap-4 px-4 py-3 md:px-6 md:py-4 hover:bg-cream-2 transition-colors group">
                 <span className="font-mono text-[0.62rem] font-bold tracking-[0.16em] text-muted/60 w-6 shrink-0 tabular-nums">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <span className="flex-1 font-sans text-[0.93rem] text-foreground">{d}</span>
-                <a
-                  href="mailto:deanresearch@mlrit.ac.in"
-                  className="text-[0.8rem] font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap"
-                  aria-label={`Request ${d}`}
-                >
-                  Request →
-                </a>
+                <span className="flex-1 font-sans text-[0.93rem] text-foreground">{d.title}</span>
+                {d.file ? (
+                  <a
+                    href={d.file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[0.8rem] font-semibold text-primary hover:underline whitespace-nowrap"
+                    aria-label={`Download ${d.title} (PDF)`}
+                  >
+                    Download PDF ↓
+                  </a>
+                ) : (
+                  <a
+                    href={`mailto:deanresearch@mlrit.ac.in?subject=${encodeURIComponent(`Request: ${d.title}`)}`}
+                    className="text-[0.8rem] font-semibold text-primary hover:underline whitespace-nowrap"
+                    aria-label={`Request ${d.title}`}
+                  >
+                    Request →
+                  </a>
+                )}
               </li>
             ))}
           </ul>
