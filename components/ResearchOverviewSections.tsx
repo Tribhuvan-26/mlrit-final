@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
+import { downloadsFrom } from '@/lib/content/downloads';
+
 /* ── Shared primitives ──────────────────────────────────────────── */
 
 const SECTION_CLASS = 'w-full px-4 md:px-10 lg:px-12 py-8 md:py-20';
@@ -690,21 +692,33 @@ export function Publications() {
 
 /* ── 9 · Downloads ──────────────────────────────────────────────── */
 
-const DOWNLOADS = [
-  'Publication Incentive Form',
-  'Patent Filing / Invention Disclosure Form',
-  'Sponsored Project Proposal Form',
-  'Consultancy Agreement Template',
-  'Patent Incentive Claim Form',
-  'Travel Support — Conference Form',
-  'Research Incentive Scheme (Full Document)',
-  'R&D Policy Document',
-  'IP Policy Document',
-  'Consultancy Policy Document',
-  'Innovation & Entrepreneurship Policy',
-];
+export type DownloadsProps = {
+  eyebrow?: string;
+  titleLead?: string;
+  titleAccent?: string;
+  intro?: string;
+  email?: string;
+  note?: string;
+  /** Repeater rows from research/downloads; the bundled list is used while it is empty. */
+  documents?: unknown;
+};
 
-export function Downloads() {
+/**
+ * Every text and the document list come from the CMS section research/downloads
+ * (edited under Research, Downloads in the admin). A document with a file gets a
+ * Download link; one without gets a Request link that emails the R&D Cell.
+ */
+export function Downloads({
+  eyebrow = '09 · Downloads',
+  titleLead = 'Forms and documents',
+  titleAccent = 'for researchers.',
+  intro = 'Forms and policy documents with a download link are ready to open; for any other document, request it from the R&D Cell by writing to',
+  email = 'deanresearch@mlrit.ac.in',
+  note = 'Documents are dispatched within two working days of request.',
+  documents,
+}: DownloadsProps) {
+  const items = downloadsFrom(documents);
+
   return (
     <section id="downloads" className={`${SECTION_CLASS} bg-white`}>
       <motion.div
@@ -714,41 +728,50 @@ export function Downloads() {
         viewport={{ once: true, margin: '-60px' }}
       >
         <motion.div variants={fadeUp}>
-          <Eyebrow>09 · Downloads</Eyebrow>
+          <Eyebrow>{eyebrow}</Eyebrow>
           <SectionTitle>
-            Forms and documents{' '}
-            <em className="font-display italic font-medium text-primary">for researchers.</em>
+            {titleLead}{' '}
+            <em className="font-display italic font-medium text-primary">{titleAccent}</em>
           </SectionTitle>
           <Dek>
-            All research-related forms and policy documents are available through the R&amp;D Cell.
-            Request any document by writing to{' '}
-            <a href="mailto:deanresearch@mlrit.ac.in" className="text-primary hover:underline">
-              deanresearch@mlrit.ac.in
+            {intro}{' '}
+            <a href={`mailto:${email}`} className="text-primary hover:underline">
+              {email}
             </a>.
           </Dek>
         </motion.div>
 
         <motion.div variants={fadeUp} className="mt-6 md:mt-10 max-w-[780px]">
           <ul className="divide-y divide-border rounded-2xl border border-border overflow-hidden bg-white">
-            {DOWNLOADS.map((d, i) => (
-              <li key={d} className="flex items-center gap-4 px-4 py-3 md:px-6 md:py-4 hover:bg-cream-2 transition-colors group">
+            {items.map((d, i) => (
+              <li key={d.id} className="flex items-center gap-4 px-4 py-3 md:px-6 md:py-4 hover:bg-cream-2 transition-colors group">
                 <span className="font-mono text-[0.62rem] font-bold tracking-[0.16em] text-muted/60 w-6 shrink-0 tabular-nums">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <span className="flex-1 font-sans text-[0.93rem] text-foreground">{d}</span>
-                <a
-                  href="mailto:deanresearch@mlrit.ac.in"
-                  className="text-[0.8rem] font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap"
-                  aria-label={`Request ${d}`}
-                >
-                  Request →
-                </a>
+                <span className="flex-1 font-sans text-[0.93rem] text-foreground">{d.title}</span>
+                {d.href ? (
+                  <a
+                    href={d.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[0.8rem] font-semibold text-primary hover:underline whitespace-nowrap"
+                    aria-label={`Download ${d.title} (PDF)`}
+                  >
+                    Download PDF ↓
+                  </a>
+                ) : (
+                  <a
+                    href={`mailto:${email}?subject=${encodeURIComponent(`Request: ${d.title}`)}`}
+                    className="text-[0.8rem] font-semibold text-primary hover:underline whitespace-nowrap"
+                    aria-label={`Request ${d.title}`}
+                  >
+                    Request →
+                  </a>
+                )}
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-muted text-[0.82rem] italic">
-            Documents are dispatched within two working days of request.
-          </p>
+          <p className="mt-4 text-muted text-[0.82rem] italic">{note}</p>
         </motion.div>
       </motion.div>
     </section>

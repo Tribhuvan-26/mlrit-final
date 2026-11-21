@@ -2250,6 +2250,49 @@ export const CONTENT_SECTIONS = {
       { name: 'overview', label: "Overview", defaultValue: "Overview" },
     ],
   },
+  'research/downloads': {
+    label: 'Research — Downloads',
+    previewPath: '/research/downloads',
+    fields: [
+      { name: 'eyebrow', label: 'Eyebrow', defaultValue: '09 · Downloads' },
+      { name: 'titleLead', label: 'Heading', defaultValue: 'Forms and documents' },
+      { name: 'titleAccent', label: 'Heading, italic part', defaultValue: 'for researchers.' },
+      {
+        name: 'intro',
+        label: 'Intro (the request email is added after it)',
+        multiline: true,
+        defaultValue:
+          'Forms and policy documents with a download link are ready to open; for any other document, request it from the R&D Cell by writing to',
+      },
+      { name: 'email', label: 'Request email', defaultValue: 'deanresearch@mlrit.ac.in' },
+      { name: 'note', label: 'Note under the list', defaultValue: 'Documents are dispatched within two working days of request.' },
+      // One row per document. Add a row to publish a new one: pick the PDF from
+      // Media (or paste its link) and it gets a Download link; a row with no
+      // file shows a Request link that emails the R&D Cell instead.
+      {
+        name: 'documents',
+        label: 'Documents',
+        type: 'repeater',
+        itemFields: [
+          { name: 'title', label: 'Title' },
+          { name: 'file', label: 'PDF (leave empty to show a Request link)', type: 'document' },
+        ],
+        defaultItems: [
+          { id: 'publication-incentive-form', title: 'Publication Incentive Form', file: '/research/downloads/publication-incentive-form.pdf' },
+          { id: 'patent-filing-invention-disclosure-form', title: 'Patent Filing / Invention Disclosure Form', file: '/research/downloads/invention-disclosure-form.pdf' },
+          { id: 'sponsored-project-proposal-form', title: 'Sponsored Project Proposal Form', file: '' },
+          { id: 'consultancy-agreement-template', title: 'Consultancy Agreement Template', file: '' },
+          { id: 'patent-incentive-claim-form', title: 'Patent Incentive Claim Form', file: '' },
+          { id: 'travel-support-conference-form', title: 'Travel Support — Conference Form', file: '' },
+          { id: 'research-incentive-scheme-full-document', title: 'Research Incentive Scheme (Full Document)', file: '' },
+          { id: 'rd-policy-document', title: 'R&D Policy Document', file: '/research/downloads/research-and-development-policy.pdf' },
+          { id: 'ip-policy-document', title: 'IP Policy Document', file: '/research/downloads/ip-policy.pdf' },
+          { id: 'consultancy-policy-document', title: 'Consultancy Policy Document', file: '/research/downloads/consultancy-policy.pdf' },
+          { id: 'innovation-entrepreneurship-policy', title: 'Innovation & Entrepreneurship Policy', file: '/research/downloads/innovation-and-entrepreneurship-policy.pdf' },
+        ],
+      },
+    ],
+  },
   'research/support': {
     label: "Research — Support",
     previewPath: '/research/support',
