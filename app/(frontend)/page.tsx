@@ -89,8 +89,8 @@ export default async function HomePage() {
     recruiterLogos,
     stats,
     placementStats,
-    eventSlides,
     placementHeadline,
+    eventSlides,
   ] = await Promise.all([
     getSectionCopy('hero', HEADLINE_FIELDS, ['film', 'poster'] as const),
     getSectionCopy('achievements', HEADLINE_FIELDS, [], ['logos', 'ranks'] as const),
