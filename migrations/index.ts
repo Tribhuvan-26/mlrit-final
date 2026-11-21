@@ -7,8 +7,9 @@ import * as migration_20261110_faculty_seed from './20261110_faculty_seed';
 import * as migration_20261110_october_circulars from './20261110_october_circulars';
 import * as migration_20261118_harika_patnala_full_profile from './20261118_harika_patnala_full_profile';
 import * as migration_20261121_084009_banners_schedule from './20261121_084009_banners_schedule';
-import * as migration_20261121_095759_admin_faculty_permission from './20261121_095759_admin_faculty_permission';
+import * as migration_20261121_095346_research_downloads from './20261121_095346_research_downloads';
 import * as migration_20261121_banners_seed from './20261121_banners_seed';
+import * as migration_20261121_research_downloads_seed from './20261121_research_downloads_seed';
 
 export const migrations = [
   {
@@ -57,14 +58,19 @@ export const migrations = [
     name: '20261121_084009_banners_schedule',
   },
   {
-    up: migration_20261121_095759_admin_faculty_permission.up,
-    down: migration_20261121_095759_admin_faculty_permission.down,
-    name: '20261121_095759_admin_faculty_permission',
+    up: migration_20261121_095346_research_downloads.up,
+    down: migration_20261121_095346_research_downloads.down,
+    name: '20261121_095346_research_downloads',
   },
   {
     up: migration_20261121_banners_seed.up,
     down: migration_20261121_banners_seed.down,
     name: '20261121_banners_seed'
+  },
+  {
+    up: migration_20261121_research_downloads_seed.up,
+    down: migration_20261121_research_downloads_seed.down,
+    name: '20261121_research_downloads_seed',
   },
 ];
 

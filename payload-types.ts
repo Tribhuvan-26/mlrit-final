@@ -149,6 +149,7 @@ export interface Config {
     'placements-global-certification': PlacementsGlobalCertification;
     'placements-industry-readiness': PlacementsIndustryReadiness;
     'placements-overview': PlacementsOverview;
+    'research-downloads': ResearchDownload;
     'research-support': ResearchSupport;
     'student-life-overview': StudentLifeOverview;
     'admissions-overview': AdmissionsOverview;
@@ -225,6 +226,7 @@ export interface Config {
     'placements-global-certification': PlacementsGlobalCertificationSelect<false> | PlacementsGlobalCertificationSelect<true>;
     'placements-industry-readiness': PlacementsIndustryReadinessSelect<false> | PlacementsIndustryReadinessSelect<true>;
     'placements-overview': PlacementsOverviewSelect<false> | PlacementsOverviewSelect<true>;
+    'research-downloads': ResearchDownloadsSelect<false> | ResearchDownloadsSelect<true>;
     'research-support': ResearchSupportSelect<false> | ResearchSupportSelect<true>;
     'student-life-overview': StudentLifeOverviewSelect<false> | StudentLifeOverviewSelect<true>;
     'admissions-overview': AdmissionsOverviewSelect<false> | AdmissionsOverviewSelect<true>;
@@ -341,6 +343,7 @@ export interface User {
         | 'placements/global-certification'
         | 'placements/industry-readiness'
         | 'placements/overview'
+        | 'research/downloads'
         | 'research/support'
         | 'student-life/overview'
         | 'admissions/overview'
@@ -2280,6 +2283,36 @@ export interface PlacementsOverview {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "research-downloads".
+ */
+export interface ResearchDownload {
+  id: number;
+  eyebrow?: string | null;
+  titleLead?: string | null;
+  titleAccent?: string | null;
+  intro?: string | null;
+  email?: string | null;
+  note?: string | null;
+  documents?:
+    | {
+        title?: string | null;
+        /**
+         * PDF — upload under Administration → Media, copy the file's URL (it starts with /media/) and paste it here. A path on the site (/examinations/…) or a link from the S3 bucket also works.
+         */
+        file?: string | null;
+        /**
+         * Stable identifier. Generated on save; do not edit.
+         */
+        itemId?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "research-support".
  */
 export interface ResearchSupport {
@@ -3916,6 +3949,30 @@ export interface PlacementsOverviewSelect<T extends boolean = true> {
   begin?: T;
   whyMlrit?: T;
   overview?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "research-downloads_select".
+ */
+export interface ResearchDownloadsSelect<T extends boolean = true> {
+  eyebrow?: T;
+  titleLead?: T;
+  titleAccent?: T;
+  intro?: T;
+  email?: T;
+  note?: T;
+  documents?:
+    | T
+    | {
+        title?: T;
+        file?: T;
+        itemId?: T;
+        id?: T;
+      };
   _status?: T;
   updatedAt?: T;
   createdAt?: T;
