@@ -316,44 +316,29 @@ export const CONTENT_SECTIONS = {
   },
 
   'home/success-stories': {
-    label: 'Homepage — Success stories',
+    label: 'Homepage — Banners',
     liveDraft: true,
     fields: [
       { name: 'eyebrow', label: 'Eyebrow', defaultValue: "Wall of Achievements" },
       { name: 'headingLead', label: 'Heading line 1', defaultValue: "Building Real Careers," },
       { name: 'headingAccent', label: 'Heading line 2', defaultValue: "Not Just Degrees." },
       { name: 'body', label: 'Body', multiline: true, defaultValue: "Real placements, real achievements — MLRIT students on the biggest campus stages and the country's top recruiters." },
+      // The banner carousel. Every banner the page shows is a row here, so each
+      // can be edited, switched off, scheduled or deleted; the page only falls
+      // back to the banners bundled in the component while this list is empty.
+      // A banner with a start date stays hidden until that day; one with an end
+      // date disappears after it. Dates are YYYY-MM-DD in Indian Standard Time.
       {
         name: 'cards',
-        label: 'Cards',
+        label: 'Banners',
         type: 'gallery',
         itemFields: [
-          { name: 'season', label: 'Season / tag' },
-          { name: 'name', label: 'Name' },
-          { name: 'detail', label: 'Detail' },
-        ],
-        defaultItems: [
-          {
-            id: 'microsoft',
-            key: 'https://i.ibb.co/MxvbKjRH/8.jpg',
-            season: 'Placement \u00b7 2026',
-            name: 'Microsoft \u2014 51 LPA',
-            detail: 'Sai Loukhya & Sailatha \u00b7 CSE',
-          },
-          {
-            id: 'faculty-cert',
-            key: 'https://i.ibb.co/670CTVrD/6.png',
-            season: 'Faculty \u00b7 Cert',
-            name: 'Mrs. Vijay Keerthika',
-            detail: 'Wipro TalentNext \u00b7 87 %',
-          },
-          {
-            id: 'football',
-            key: 'https://i.ibb.co/99JB52L2/4.jpg',
-            season: 'Sports \u00b7 1st Place',
-            name: 'MLRIT Football',
-            detail: "vs. St. Peter's \u00b7 March 21\u201322",
-          },
+          { name: 'season', label: 'Tag (top-left of the banner)' },
+          { name: 'name', label: 'Heading' },
+          { name: 'detail', label: 'Detail line' },
+          'active',
+          'startDate',
+          'endDate',
         ],
       },
     ],
@@ -2546,7 +2531,7 @@ export type FieldConfig = {
    * Read through galleryItemFields()/repeaterItemFields() rather than directly
    * — those narrow the union by the element kind actually present.
    */
-  readonly itemFields?: readonly GalleryItemField[] | readonly RepeaterItemField[];
+  readonly itemFields?: readonly (GalleryItemField | RepeaterItemField)[];
   /**
    * List fields only. How many items the consuming component can actually
    * render. Extras are kept in the data but never displayed, so the editor

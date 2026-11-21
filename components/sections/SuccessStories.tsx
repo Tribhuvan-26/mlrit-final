@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 
 import { resolveAssetUrl } from '@/lib/cdn/url';
 import { asGalleryItems, asText } from '@/lib/content/sections';
+import { isScheduledNow } from '@/lib/content/schedule';
 import { sectionDomId, useMergedSection } from '@/lib/preview/context';
 
 type Card = {
@@ -192,27 +193,25 @@ type SuccessStoriesProps = {
 };
 
 /**
- * Maps gallery items onto Card and merges them with the bundled CARDS. A saved
- * gallery adds its cards to the front instead of replacing the fallback, so
- * posters shipped with the code stay visible even while an older, smaller CMS
- * gallery is saved. A saved card whose name matches a bundled one replaces it,
- * which is how an editor overrides a specific poster. An empty gallery yields
- * CARDS verbatim.
+ * The banners to show. The CMS list is the whole truth once it has any rows:
+ * only rows that are active and inside their start/end dates are shown, so
+ * deleting, switching off or timing a banner in the admin really removes it.
+ * The bundled CARDS are only the fallback for a list that was never filled in,
+ * so the marquee is never blank on a fresh install.
  */
-function cardsFrom(value: unknown): Card[] {
+function cardsFrom(value: unknown, now: number = Date.now()): Card[] {
   const items = asGalleryItems(value);
+  if (items.length === 0) return CARDS;
 
-  const saved = items
-    .map((item, i) => ({
-      img: resolveAssetUrl(item.key, { allowTransient: true }) ?? CARDS[i]?.img ?? '',
+  return items
+    .filter((item) => isScheduledNow(item, now))
+    .map((item) => ({
+      img: resolveAssetUrl(item.key, { allowTransient: true }) ?? '',
       season: asText(item.season),
       name: asText(item.name),
       detail: asText(item.detail) || undefined,
     }))
     .filter((card) => card.img);
-
-  const overridden = new Set(saved.map((card) => card.name));
-  return [...saved, ...CARDS.filter((card) => !overridden.has(card.name))];
 }
 
 export default function SuccessStories(props: SuccessStoriesProps) {
@@ -302,6 +301,7 @@ export default function SuccessStories(props: SuccessStoriesProps) {
       </div>
 
       {/* ── Infinite marquee — cards scroll continuously; hover pauses. ── */}
+      {items.length > 0 && (
       <div
         className="relative overflow-hidden"
         style={{
@@ -354,6 +354,7 @@ export default function SuccessStories(props: SuccessStoriesProps) {
           ))}
         </div>
       </div>
+      )}
 
       {/* Local marquee keyframes — duration scales with the card count so the
           track keeps a brisk pace; pauses on hover so users can inspect a
