@@ -6,6 +6,8 @@ import * as migration_20261110_062720_faculty_cms from './20261110_062720_facult
 import * as migration_20261110_faculty_seed from './20261110_faculty_seed';
 import * as migration_20261110_october_circulars from './20261110_october_circulars';
 import * as migration_20261118_harika_patnala_full_profile from './20261118_harika_patnala_full_profile';
+import * as migration_20261121_084009_banners_schedule from './20261121_084009_banners_schedule';
+import * as migration_20261121_banners_seed from './20261121_banners_seed';
 
 export const migrations = [
   {
@@ -47,6 +49,16 @@ export const migrations = [
     up: migration_20261118_harika_patnala_full_profile.up,
     down: migration_20261118_harika_patnala_full_profile.down,
     name: '20261118_harika_patnala_full_profile',
+  },
+  {
+    up: migration_20261121_084009_banners_schedule.up,
+    down: migration_20261121_084009_banners_schedule.down,
+    name: '20261121_084009_banners_schedule',
+  },
+  {
+    up: migration_20261121_banners_seed.up,
+    down: migration_20261121_banners_seed.down,
+    name: '20261121_banners_seed',
   },
 ];
 

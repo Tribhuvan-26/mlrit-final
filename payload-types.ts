@@ -910,6 +910,18 @@ export interface HomeSuccessStory {
         name?: string | null;
         detail?: string | null;
         /**
+         * Untick to hide without deleting.
+         */
+        active?: boolean | null;
+        /**
+         * Optional. YYYY-MM-DD. Hidden until this day begins (India time).
+         */
+        startDate?: string | null;
+        /**
+         * Optional. YYYY-MM-DD. Shown through the end of this day (India time), then hidden.
+         */
+        endDate?: string | null;
+        /**
          * Stable identifier. Generated on save; do not edit.
          */
         itemId?: string | null;
@@ -2684,6 +2696,9 @@ export interface HomeSuccessStoriesSelect<T extends boolean = true> {
         season?: T;
         name?: T;
         detail?: T;
+        active?: T;
+        startDate?: T;
+        endDate?: T;
         itemId?: T;
         id?: T;
       };
